@@ -51,12 +51,12 @@ Contiene los datos de los profesores, como nombre, id, etc. Estos datos se carga
     "departamento": "Lengua"
   }
 ]
-
+```
 Guardias (guardias.json)
 Almacena las guardias registradas, con información sobre la hora, profesor asignado, grupo y aula afectados, entre otros detalles importantes.
 
 Ejemplo:
-json
+```json
 Copiar
 Editar
 [

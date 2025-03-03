@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Guardia con Vue y jQuery</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h2>Registrar Guardia por Ausencia de Profesor</h2>
+
+        <form @submit.prevent="registrarGuardia">
+            <div>
+                <label for="hora">Hora de la guardia:</label>
+                <input type="text" v-model="guardia.hora" id="hora" name="hora" required placeholder="Ej. 08:00 - 09:00">
+            </div>
+
+            <div>
+                <label for="profesor">Profesor:</label>
+                <select v-model="guardia.profesor_id" id="profesor" name="profesor" required>
+                    <option value="">Seleccionar Profesor</option>
+                    <option v-for="profesor in profesores" :value="profesor.id" :key="profesor.id">
+                        {{ profesor.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label for="grupo">Grupo:</label>
+                <input type="text" v-model="guardia.grupo" id="grupo" name="grupo" required placeholder="Ej. 1º A">
+            </div>
+
+            <div>
+                <label for="aula">Aula:</label>
+                <input type="text" v-model="guardia.aula" id="aula" name="aula" required placeholder="Ej. A101">
+            </div>
+
+            <div>
+                <label for="solucion">Solución aplicada:</label>
+                <input type="text" v-model="guardia.solucion" id="solucion" name="solucion" required placeholder="Ej. Sustitución">
+            </div>
+
+            <div>
+                <label for="alumnos_problematicos">¿Alumnos problemáticos?</label>
+                <input type="checkbox" v-model="guardia.alumnos_problematicos" id="alumnos_problematicos" name="alumnos_problematicos">
+            </div>
+
+            <div>
+                <label for="registro_firmado">¿Registro firmado?</label>
+                <input type="checkbox" v-model="guardia.registro_firmado" id="registro_firmado" name="registro_firmado">
+            </div>
+
+            <button type="submit">Registrar Guardia</button>
+        </form>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    // Datos para la guardia
+                    guardia: {
+                        hora: '',
+                        profesor_id: '',
+                        grupo: '',
+                        aula: '',
+                        solucion: '',
+                        alumnos_problematicos: false,
+                        registro_firmado: false
+                    },
+                    // Array para los profesores
+                    profesores: []
+                };
+            },
+            mounted() {
+                // Cargar los datos de los profesores al cargar la página
+                $.getJSON('profesores.json', (data) => {
+                    this.profesores = data;
+                });
+            },
+            methods: {
+                registrarGuardia() {
+                    // Crear el objeto con los datos de la guardia
+                    const nuevaGuardia = {
+                        hora: this.guardia.hora,
+                        profesor_id: this.guardia.profesor_id,
+                        grupo: this.guardia.grupo,
+                        aula: this.guardia.aula,
+                        solucion: this.guardia.solucion,
+                        alumnos_problematicos: this.guardia.alumnos_problematicos,
+                        registro_firmado: this.guardia.registro_firmado
+                    };
+
+                    // Realizar la solicitud AJAX para registrar la guardia
+                    $.ajax({
+                        url: 'http://localhost:3000/guardias',  // Endpoint del servidor
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(nuevaGuardia),
+                        success: (response) => {
+                            alert('Guardia registrada con éxito.');
+                            // Resetear el formulario
+                            this.guardia = {
+                                hora: '',
+                                profesor_id: '',
+                                grupo: '',
+                                aula: '',
+                                solucion: '',
+                                alumnos_problematicos: false,
+                                registro_firmado: false
+                            };
+                        },
+                        error: (error) => {
+                            alert('Error al registrar la guardia.');
+                            console.error(error);
+                        }
+                    });
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+</html>

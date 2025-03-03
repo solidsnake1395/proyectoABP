@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "hora": "08:00 - 09:00",
+        "profesor_id": 1, 
+        "grupo": "1º A",
+        "aula": "A101",
+        "solucion": "Sustitución",
+        "alumnos_problematicos": true,
+        "registro_firmado": false
+    }
+]

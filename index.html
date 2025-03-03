@@ -1,1 +1,66 @@
-<h1>Hola mundo xd</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue con JSON Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #app {
+            margin: 20px;
+        }
+    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Incluir jQuery -->
+</head>
+<body>
+    <div id="app">
+        <h2>Lista de Usuarios</h2>
+        <ul>
+            <li v-for="usuario in usuarios" :key="usuario.id">
+                {{ usuario.nombre }} - {{ usuario.rol }} - {{ usuario.id }}
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    usuarios: []  // Aquí se guardarán los datos de la API
+                };
+            },
+            mounted() { // Se ejecuta cuando se carga la página
+                this.cargarUsuarios(); // Llamamos a la función para cargar los usuarios
+            },
+            methods: {
+                cargarUsuarios() {
+                    // Usamos jQuery para hacer la solicitud AJAX
+                    $.ajax({
+                        url: 'http://localhost:3000/usuarios',  // URL del servidor
+                        method: 'GET',  // Tipo de solicitud
+                        success: (data) => {
+                            // Si la solicitud es exitosa, asignamos los datos a la variable usuarios
+                            this.usuarios = data;
+                        },
+                        error: (jqXHR, textStatus, errorThrown) => {
+                            // Si hay un error, lo mostramos en la consola
+                            console.error('Error al cargar los usuarios:', textStatus, errorThrown);
+                        }
+                    });
+                }
+            }
+        });
+
+        app.mount('#app'); // Decimos a Vue que maneje el div con id="app"
+    </script>
+</body>
+</html>

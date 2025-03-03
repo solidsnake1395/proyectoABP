@@ -1,0 +1,9 @@
+{
+  "usuarios": [
+    { "id": 1, "nombre": "Juan", "rol": "Profesor" },
+    { "id": 2, "nombre": "María", "rol": "Estudiante" }
+  ],
+  "guardias": [
+    { "id": 1, "fecha": "2025-02-28", "profesor": "Juan", "asignatura": "Matemáticas" }
+  ]
+}

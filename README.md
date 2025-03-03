@@ -57,8 +57,6 @@ Almacena las guardias registradas, con información sobre la hora, profesor asig
 
 Ejemplo:
 ```json
-Copiar
-Editar
 [
   {
     "hora": "08:00",

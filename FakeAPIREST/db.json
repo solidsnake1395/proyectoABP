@@ -1,0 +1,125 @@
+{
+  "profesores": [
+    {
+      "id": "1",
+      "nombre": "Ana Martínez",
+      "asignaturas": [
+        "Matemáticas",
+        "Física"
+      ],
+      "grupo": "1º A"
+    },
+    {
+      "id": "2",
+      "nombre": "Juan Pérez",
+      "asignaturas": [
+        "Lengua",
+        "Literatura"
+      ],
+      "grupo": "2º B"
+    },
+    {
+      "id": "3",
+      "nombre": "Carlos Gómez",
+      "asignaturas": [
+        "Historia",
+        "Civismo"
+      ],
+      "grupo": "3º C"
+    },
+    {
+      "id": "4",
+      "nombre": "Laura Fernández",
+      "asignaturas": [
+        "Biología",
+        "Química"
+      ],
+      "grupo": "4º D"
+    },
+    {
+      "id": "5",
+      "nombre": "José López",
+      "asignaturas": [
+        "Inglés",
+        "Francés"
+      ],
+      "grupo": "1º B"
+    },
+    {
+      "id": "6",
+      "nombre": "Marta Rodríguez",
+      "asignaturas": [
+        "Geografía",
+        "Economía"
+      ],
+      "grupo": "2º A"
+    },
+    {
+      "id": "7",
+      "nombre": "Pedro Sánchez",
+      "asignaturas": [
+        "Educación Física",
+        "Salud y Bienestar"
+      ],
+      "grupo": "3º B"
+    },
+    {
+      "id": "8",
+      "nombre": "Isabel Ruiz",
+      "asignaturas": [
+        "Música",
+        "Artes Plásticas"
+      ],
+      "grupo": "4º A"
+    },
+    {
+      "id": "9",
+      "nombre": "Antonio Díaz",
+      "asignaturas": [
+        "Tecnología",
+        "Informática"
+      ],
+      "grupo": "1º C"
+    },
+    {
+      "id": "10",
+      "nombre": "Cristina Vargas",
+      "asignaturas": [
+        "Filosofía",
+        "Psicología"
+      ],
+      "grupo": "2º C"
+    }
+  ],
+  "guardias": [
+    {
+      "id": "1",
+      "hora": "08:00 - 09:00",
+      "profesor_id": 1,
+      "grupo": "1º A",
+      "aula": "A101",
+      "solucion": "Sustitución",
+      "alumnos_problematicos": true,
+      "registro_firmado": false,
+      "profesor": {
+        "id": 1,
+        "nombre": "Ana Martínez",
+        "asignaturas": [
+          "Matemáticas",
+          "Física"
+        ],
+        "grupo": "1º A"
+      }
+    },
+    {
+      "id": "80fc",
+      "hora": "09:00 - 10:00",
+      "profesor_id": "1",
+      "grupo": "1º A",
+      "aula": "2",
+      "solucion": "guardia",
+      "alumnos_problematicos": false,
+      "firma": false
+    }
+  ]
+}

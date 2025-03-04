@@ -3,64 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue con JSON Server</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        #app {
-            margin: 20px;
-        }
-    </style>
+    <title>Gestión de Guardias</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Incluir jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div id="app">
-        <h2>Lista de Usuarios</h2>
-        <ul>
-            <li v-for="usuario in usuarios" :key="usuario.id">
-                {{ usuario.nombre }} - {{ usuario.rol }} - {{ usuario.id }}
-            </li>
-        </ul>
+        <h1>Guardias Diarias</h1>
+
+        <!-- Tabla de Guardias -->
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Profesor</th>
+                    <th>Grupo</th>
+                    <th>Aula</th>
+                    <th>Solución</th>
+                    <th>Alumnos Problemáticos</th>
+                    <th>Firma</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="guardia in guardias" :key="guardia.hora">
+                    <td>{{ guardia.hora }}</td>
+                    <td>{{ guardia.profesor }}</td>
+                    <td>{{ guardia.grupo }}</td>
+                    <td>{{ guardia.aula }}</td>
+                    <td>{{ guardia.solucion }}</td>
+                    <td>{{ guardia.alumnos_problematicos ? 'Sí' : 'No' }}</td>
+                    <td>{{ guardia.firma ? 'Firmado' : 'Pendiente' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Formulario para Añadir Guardia -->
+        <h2>Registrar Guardia</h2>
+        <form @submit.prevent="registrarGuardia">
+            <label for="hora">Hora:</label>
+            <input type="text" id="hora" v-model="nuevaGuardia.hora" required><br><br>
+
+            <label for="profesor">Profesor:</label>
+            <select id="profesor" v-model="nuevaGuardia.profesor" required>
+                <option v-for="profesor in profesores" :key="profesor.id" :value="profesor.nombre">{{ profesor.nombre }}</option>
+            </select><br><br>
+
+            <label for="grupo">Grupo:</label>
+            <input type="text" id="grupo" v-model="nuevaGuardia.grupo" required><br><br>
+
+            <label for="aula">Aula:</label>
+            <input type="text" id="aula" v-model="nuevaGuardia.aula" required><br><br>
+
+            <label for="solucion">Solución:</label>
+            <input type="text" id="solucion" v-model="nuevaGuardia.solucion" required><br><br>
+
+            <label for="alumnos_problematicos">Alumnos Problemáticos:</label>
+            <input type="checkbox" id="alumnos_problematicos" v-model="nuevaGuardia.alumnos_problematicos"><br><br>
+
+            <button type="submit">Registrar Guardia</button>
+        </form>
     </div>
 
     <script>
         const app = Vue.createApp({
             data() {
                 return {
-                    usuarios: []  // Aquí se guardarán los datos de la API
+                    profesores: [],  // Lista de profesores
+                    guardias: [],  // Lista de guardias
+                    nuevaGuardia: {
+                        hora: '',
+                        profesor: '',
+                        grupo: '',
+                        aula: '',
+                        solucion: '',
+                        alumnos_problematicos: false,
+                        firma: false
+                    }
                 };
             },
-            mounted() { // Se ejecuta cuando se carga la página
-                this.cargarUsuarios(); // Llamamos a la función para cargar los usuarios
+            mounted() {
+                this.cargarDatos();
             },
             methods: {
-                cargarUsuarios() {
-                    // Usamos jQuery para hacer la solicitud AJAX
-                    $.ajax({
-                        url: 'http://localhost:3000/usuarios',  // URL del servidor
-                        method: 'GET',  // Tipo de solicitud
-                        success: (data) => {
-                            // Si la solicitud es exitosa, asignamos los datos a la variable usuarios
-                            this.usuarios = data;
-                        },
-                        error: (jqXHR, textStatus, errorThrown) => {
-                            // Si hay un error, lo mostramos en la consola
-                            console.error('Error al cargar los usuarios:', textStatus, errorThrown);
-                        }
+                // Cargar datos de los profesores y guardias
+                cargarDatos() {
+                    // Obtener los datos de los profesores
+                    $.get('http://localhost:3000/profesores', (data) => {
+                        this.profesores = data;
                     });
+
+                    // Obtener los datos de las guardias
+                    $.get('http://localhost:3000/guardias', (data) => {
+                        this.guardias = data;
+                    });
+                },
+
+                // Registrar una nueva guardia
+                registrarGuardia() {
+                    const nuevaGuardia = { ...this.nuevaGuardia, firma: false };
+                    
+                    // Hacer un POST al servidor para añadir la nueva guardia
+                    $.post('http://localhost:3000/guardias', nuevaGuardia, (data) => {
+                        this.guardias.push(data);  // Añadir la nueva guardia a la lista
+                        this.limpiarFormulario();
+                    });
+                },
+
+                // Limpiar el formulario después de registrar la guardia
+                limpiarFormulario() {
+                    this.nuevaGuardia = {
+                        hora: '',
+                        profesor: '',
+                        grupo: '',
+                        aula: '',
+                        solucion: '',
+                        alumnos_problematicos: false,
+                        firma: false
+                    };
                 }
             }
         });
 
-        app.mount('#app'); // Decimos a Vue que maneje el div con id="app"
+        app.mount('#app');
     </script>
 </body>
 </html>

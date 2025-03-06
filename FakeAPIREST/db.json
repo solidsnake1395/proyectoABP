@@ -120,6 +120,26 @@
       "solucion": "guardia",
       "alumnos_problematicos": false,
       "firma": false
+    },
+    {
+      "id": "6892",
+      "hora": "08:00",
+      "profesor_id": "2",
+      "grupo": "patatas",
+      "aula": "cebollas",
+      "solucion": "puerros",
+      "alumnos_problematicos": true,
+      "firma": false
+    },
+    {
+      "id": "b708",
+      "hora": "08:30 - 09:25",
+      "profesor_id": "1",
+      "grupo": "1º A",
+      "aula": "101",
+      "solucion": "guardia",
+      "alumnos_problematicos": true,
+      "firma": false
     }
   ]
 }

@@ -142,7 +142,6 @@
       "solucion": "guardia",
       "alumnos_problematicos": false,
       "firma": false
-<<<<<<< HEAD
     },
     {
       "id": "6892",
@@ -165,8 +164,6 @@
       "solucion": "guardia",
       "alumnos_problematicos": true,
       "firma": false
-=======
->>>>>>> parent of 7ee3ede (Actualizar db.json con nuevos registros y mejorar estilos en CSS; modificar etiquetas en index.html)
     }
   ]
 }

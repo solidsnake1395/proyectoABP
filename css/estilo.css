@@ -1,5 +1,4 @@
 body {
-<<<<<<< HEAD
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f9;
     color: #333;
@@ -68,6 +67,20 @@ h1, h2 {
     border-left: 1px solid #4a4e69;
 }
 
+/* Estilo para los detalles de la guardia al pasar el ratón */
+.detalle-guardia {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+.cell:hover .detalle-guardia {
+    display: block;
+}
+
 /* Formularios */
 form {
     margin-top: 20px;
@@ -123,11 +136,3 @@ button:hover {
         width: 100%;
     }
 }
-=======
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
->>>>>>> parent of 7ee3ede (Actualizar db.json con nuevos registros y mejorar estilos en CSS; modificar etiquetas en index.html)

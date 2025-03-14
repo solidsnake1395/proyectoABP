@@ -1,5 +1,5 @@
-/* Estilos generales */
 body {
+<<<<<<< HEAD
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f9;
     color: #333;
@@ -123,3 +123,11 @@ button:hover {
         width: 100%;
     }
 }
+=======
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+>>>>>>> parent of 7ee3ede (Actualizar db.json con nuevos registros y mejorar estilos en CSS; modificar etiquetas en index.html)

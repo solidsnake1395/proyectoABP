@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Guardias</title>
+    <link rel="stylesheet" href="css/estilo.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <img src="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" alt="Logo" />
+      <h1>Guardias Diarias</h1>
+
+      <!-- Tabla de Guardias -->
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Profesor</th>
+            <th>Grupo</th>
+            <th>Aula</th>
+            <th>Solución</th>
+            <th>SP</th>
+            <th>Firma</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="guardia in guardias" :key="guardia.id">
+            <td>{{ guardia.hora }}</td>
+            <!-- Buscar el nombre del profesor por su id -->
+            <td>{{ obtenerProfesorNombre(guardia.profesor_id) }}</td>
+            <td>{{ guardia.grupo }}</td>
+            <td>{{ guardia.aula }}</td>
+            <td>{{ guardia.solucion }}</td>
+            <td>{{ guardia.alumnos_problematicos ? 'Sí' : 'No' }}</td>
+            <td>{{ guardia.firma ? 'Firmado' : 'Pendiente' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Formulario para Añadir Guardia -->
+      <h2>Registrar Guardia</h2>
+      <form @submit.prevent="registrarGuardia">
+        <label for="hora">Hora:</label>
+        <select id="hora" v-model="nuevaGuardia.hora" required>
+            <option value="08:30 - 09:25">08:30 - 09:25</option>
+            <option value="09:25 - 10:20">09:25 - 10:20</option>
+            <option value="10:20 - 11:15">10:20 - 11:15</option>
+            <option value="11:15 - 11:45">11:15 - 11:45</option>
+            <option value="11:45 - 12:40">11:45 - 12:40</option>
+            <option value="12:40 - 13:35">12:40 - 13:35</option>
+            <option value="13:35 - 14:30">13:35 - 14:30</option>
+        </select><br /><br />
+
+        <label for="profesor">Profesor:</label>
+        <select id="profesor" v-model="nuevaGuardia.profesor_id" required>
+          <option
+            v-for="profesor in profesores"
+            :key="profesor.id"
+            :value="profesor.id"
+          >
+            {{ profesor.nombre }}
+          </option></select
+        ><br /><br />
+
+        <label for="grupo">Grupo:</label>
+        <input
+          type="text"
+          id="grupo"
+          v-model="nuevaGuardia.grupo"
+          required
+        /><br /><br />
+
+        <label for="aula">Aula:</label>
+        <input
+          type="text"
+          id="aula"
+          v-model="nuevaGuardia.aula"
+          required
+        /><br /><br />
+
+        <label for="solucion">Solución:</label>
+        <input
+          type="text"
+          id="solucion"
+          v-model="nuevaGuardia.solucion"
+          required
+        /><br /><br />
+
+        <label for="alumnos_problematicos">Sala profes:</label>
+        <input
+          type="checkbox"
+          id="alumnos_problematicos"
+          v-model="nuevaGuardia.alumnos_problematicos"
+        /><br /><br />
+
+        <button type="submit">Registrar Guardia</button>
+      </form>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            profesores: [], // Lista de profesores
+            guardias: [], // Lista de guardias
+            nuevaGuardia: {
+              hora: "",
+              profesor_id: "", // Ahora es el id del profesor
+              grupo: "",
+              aula: "",
+              solucion: "",
+              alumnos_problematicos: false,
+              firma: false,
+            },
+          };
+        },
+        mounted() {
+          this.cargarDatos();
+        },
+        methods: {
+          // Cargar datos de los profesores y guardias
+          cargarDatos() {
+            // Obtener los datos de los profesores
+            $.get("http://localhost:3000/profesores", (data) => {
+              this.profesores = data;
+            });
+
+            // Obtener los datos de las guardias
+            $.get("http://localhost:3000/guardias", (data) => {
+              this.guardias = data;
+            });
+          },
+
+          // Obtener el nombre del profesor por su id
+          obtenerProfesorNombre(profesor_id) {
+            const profesor = this.profesores.find((p) => p.id === profesor_id);
+            return profesor ? profesor.nombre : "Desconocido";
+          },
+
+          registrarGuardia() {
+            const nuevaGuardia = {
+              ...this.nuevaGuardia,
+              firma: false,
+            };
+
+            // Hacer el POST con JSON
+            $.ajax({
+              url: "http://localhost:3000/guardias",
+              type: "POST",
+              contentType: "application/json", // Establecer el tipo de contenido como JSON
+              data: JSON.stringify(nuevaGuardia), // Convertir los datos a JSON
+              success: (data) => {
+                this.guardias.push(data); // Añadir la nueva guardia a la lista
+                this.limpiarFormulario();
+              },
+              error: (jqXHR, textStatus, errorThrown) => {
+                console.log(
+                  "Error al registrar la guardia:",
+                  jqXHR.responseText
+                ); // Mostrar el error
+              },
+            });
+          },
+          // Limpiar el formulario después de registrar la guardia
+          limpiarFormulario() {
+            this.nuevaGuardia = {
+              hora: "",
+              profesor_id: "",
+              grupo: "",
+              aula: "",
+              solucion: "",
+              alumnos_problematicos: false,
+              firma: false,
+            };
+          },
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

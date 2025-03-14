@@ -94,8 +94,29 @@
   "guardias": [
     {
       "id": "1",
-      "hora": "08:00 - 09:00",
-      "profesor_id": 1,
+      "hora": "08:30 - 09:25",
+      "dia": "Lunes",
+      "profesor_id": "1",
+      "grupo": "1º A",
+      "aula": "A101",
+      "solucion": "Sustitución",
+      "alumnos_problematicos": true,
+      "registro_firmado": true,
+      "profesor": {
+        "id": 1,
+        "nombre": "Ana Martínez",
+        "asignaturas": [
+          "Matemáticas",
+          "Física"
+        ],
+        "grupo": "1º A"
+      }
+    },
+    {
+      "id": "1",
+      "hora": "08:30 - 09:25",
+      "dia": "Lunes",
+      "profesor_id": "1",
       "grupo": "1º A",
       "aula": "A101",
       "solucion": "Sustitución",
@@ -113,7 +134,8 @@
     },
     {
       "id": "80fc",
-      "hora": "09:00 - 10:00",
+      "hora": "10:20 - 11:15",
+      "dia": "Martes",
       "profesor_id": "1",
       "grupo": "1º A",
       "aula": "2",
@@ -123,7 +145,8 @@
     },
     {
       "id": "6892",
-      "hora": "08:00",
+      "hora": "08:30 - 09:25",
+      "dia": "Miercoles",
       "profesor_id": "2",
       "grupo": "patatas",
       "aula": "cebollas",
@@ -133,7 +156,8 @@
     },
     {
       "id": "b708",
-      "hora": "08:30 - 09:25",
+      "hora": "10:20 - 11:15",
+      "dia": "Viernes",
       "profesor_id": "1",
       "grupo": "1º A",
       "aula": "101",

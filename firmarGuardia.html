@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firmar Guardia</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="icon" href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Firmar Guardia</h1>
+        <form @submit.prevent="firmarGuardia">
+            <label for="profesor">Seleccionar Profesor:</label>
+            <select id="profesor" v-model="profesorSeleccionado" required>
+                <option v-for="profesor in profesores" :key="profesor.id" :value="profesor.id">
+                    {{ profesor.nombre }}
+                </option>
+            </select><br /><br />
+            <button type="submit">Firmar Guardia</button>
+        </form>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    profesores: [],
+                    guardiaId: null,
+                    profesorSeleccionado: ""
+                };
+            },
+            mounted() {
+                this.cargarDatos();
+                this.cargarParametrosURL();
+            },
+            methods: {
+                cargarDatos() {
+                    $.get("http://localhost:3000/profesores", (data) => {
+                        this.profesores = data;
+                    });
+                },
+                cargarParametrosURL() {
+                    const params = new URLSearchParams(window.location.search);
+                    this.guardiaId = params.get('id');
+                },
+                firmarGuardia() {
+                    if (this.guardiaId && this.profesorSeleccionado) {
+                        $.ajax({
+                            url: `http://localhost:3000/guardias/${this.guardiaId}`,
+                            type: "PATCH",
+                            contentType: "application/json",
+                            data: JSON.stringify({ registro_firmado: true, sustituto_id: this.profesorSeleccionado }),
+                            success: () => {
+                                alert("Guardia firmada con éxito");
+                                window.location.href = "index.html";
+                            },
+                            error: (jqXHR, textStatus, errorThrown) => {
+                                console.log("Error al firmar la guardia:", jqXHR.responseText);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        app.mount("#app");
+    </script>
+</body>
+</html>

@@ -1,93 +1,150 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Horario de Guardias</title>
+    <title>Gestion de guardias</title>
     <link rel="stylesheet" href="css/estilo.css" />
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <div id="app">
-        <h1>Horario de Guardias</h1>
-        <div class="table-container">
-            <!-- Encabezado -->
-            <div class="row header">
-                <div class="cell">Hora</div>
-                <div class="cell" v-for="dia in dias" :key="dia">{{ dia }}</div>
-            </div>
-            <!-- Filas de datos -->
-            <div class="row" v-for="hora in horas" :key="hora">
-                <div class="cell">{{ hora }}</div>
-                <div class="cell" v-for="dia in dias" :key="dia" 
-                     :style="{
-                        backgroundColor: obtenerColorGuardias(dia, hora)
-                     }">
-                    <div v-for="guardia in obtenerGuardias(dia, hora)" :key="guardia.id"
-                         @mouseover="mostrarDetalle(guardia)" @mouseleave="ocultarDetalle">
-                        {{ obtenerProfesorNombre(guardia.profesor_id) }} ({{ guardia.aula }})
-                        <div v-if="guardiaSeleccionada && guardiaSeleccionada.id === guardia.id" 
-                             class="detalle-guardia">
-                            <p>Profesor: {{ obtenerProfesorNombre(guardia.profesor_id) }}</p>
-                            <p>Aula: {{ guardia.aula }}</p>
-                            <p>Solución: {{ guardia.solucion }}</p>
-                            <p>Firmada: {{ guardia.registro_firmado ? 'Sí' : 'No' }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <link
+      rel="icon"
+      href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png"
+      type="image/x-icon"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Horario de Guardias</h1>
+    </header>
+    <main id="app">
+      <div v-for="dia in dias" :key="dia" class="dia">
+        <h2>{{ dia }}</h2>
+        <div v-for="hora in horasConGuardias(dia)" :key="hora" class="hora">
+          <div
+            v-for="guardia in obtenerGuardias(dia, hora).sort((a, b) => {
+                    if (!a.registro_firmado && b.registro_firmado) return -1;
+                    if (a.registro_firmado && !b.registro_firmado) return 1;
+                    return 0; // Si ambos tienen el mismo estado de firma, no cambiar el orden
+                })"
+            :key="guardia.id"
+            :class="['guardia', { 'no-firmada': !guardia.registro_firmado, 'firmada': guardia.registro_firmado }]"
+          >
+            <h3>{{ hora }}</h3>
+            <p>Profesor: {{ obtenerProfesorNombre(guardia.profesor_id) }}</p>
+            <p v-if="!guardia.registro_firmado">Firmado: No</p>
+            <span v-if="guardia.registro_firmado"
+              >Firmada por: {{ obtenerProfesorNombre(guardia.sustituto_id)
+              }}</span
+            >
+            <button class="firmar"
+              v-if="!guardia.registro_firmado"
+              @click="redirigirFirmarGuardia(guardia.id)"
+            >
+              Firmar Guardia
+            </button>
+          </div>
         </div>
-    </div>
-
+        <button @click="redirigirFormulario(dia, null)">Crear guardia</button>
+      </div>
+    </main>
     <script>
-        const app = Vue.createApp({
-            data() {
-                return {
-                    dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-                    horas: [
-                        "08:30 - 09:25", "09:25 - 10:20", "10:20 - 11:15",
-                        "11:15 - 11:45", "11:45 - 12:40", "12:40 - 13:35", "13:35 - 14:30"
-                    ],
-                    profesores: [],
-                    guardias: [],
-                    guardiaSeleccionada: null
-                };
-            },
-            mounted() {
-                this.cargarDatos();
-            },
-            methods: {
-                cargarDatos() {
-                    $.get("http://localhost:3000/profesores", (data) => {
-                        this.profesores = data;
-                    });
-                    $.get("http://localhost:3000/guardias", (data) => {
-                        this.guardias = data;
-                    });
-                },
-                obtenerProfesorNombre(profesor_id) {
-                    const profesor = this.profesores.find(p => p.id === profesor_id);
-                    return profesor ? profesor.nombre : "Desconocido";
-                },
-                obtenerGuardias(dia, hora) {
-                    return this.guardias.filter(g => g.hora === hora && g.dia === dia);
-                },
-                obtenerColorGuardias(dia, hora) {
-                    const guardias = this.obtenerGuardias(dia, hora);
-                    // Verificar si alguna guardia no está firmada
-                    const tieneGuardiasSinFirmar = guardias.some(guardia => !guardia.registro_firmado);
-                    return tieneGuardiasSinFirmar ? 'rgb(221, 177, 177)' : 'rgb(202, 238, 177)';
-                },
-                mostrarDetalle(guardia) {
-                    this.guardiaSeleccionada = guardia;
-                },
-                ocultarDetalle() {
-                    this.guardiaSeleccionada = null;
-                }
+      const app = Vue.createApp({
+        data() {
+          return {
+            dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+            horas: [
+              "08:30 - 09:25",
+              "09:25 - 10:20",
+              "10:20 - 11:15",
+              "11:15 - 11:45",
+              "11:45 - 12:40",
+              "12:40 - 13:35",
+              "13:35 - 14:30",
+            ],
+            profesores: [],
+            guardias: [],
+            diaSeleccionado: null,
+            mostrarDetalles: null, // Para mostrar los detalles de la guardia
+            horaSeleccionada: null, // Para mostrar el botón solo cuando el ratón esté sobre una hora específica
+          };
+        },
+        mounted() {
+          this.cargarDatos();
+          this.setDiaSeleccionado(); // Llamamos a la función para establecer el día seleccionado
+        },
+        methods: {
+          async cargarDatos() {
+            try {
+              let responseProfesores = await fetch(
+                "http://localhost:3000/profesores"
+              );
+              this.profesores = await responseProfesores.json();
+
+              let responseGuardias = await fetch(
+                "http://localhost:3000/guardias"
+              );
+              this.guardias = await responseGuardias.json();
+
+              // Ordenar las guardias: no firmadas primero, luego firmadas
+              this.guardias.sort((a, b) => {
+                if (!a.registro_firmado && b.registro_firmado) return -1;
+                if (a.registro_firmado && !b.registro_firmado) return 1;
+                return 0; // Si ambos tienen el mismo estado de firma, no cambiar el orden
+              });
+            } catch (error) {
+              console.error("Error cargando datos:", error);
             }
-        });
-        app.mount("#app");
+          },
+          setDiaSeleccionado() {
+            const diasSemana = [
+              "Lunes",
+              "Martes",
+              "Miércoles",
+              "Jueves",
+              "Viernes",
+            ];
+            const diaActual = new Date().getDay(); // Devuelve el día de la semana (0: Domingo, 1: Lunes, ..., 6: Sábado)
+            // Ajustamos el valor de día actual para que coincida con nuestro arreglo de días de semana
+            this.diaSeleccionado = diasSemana[diaActual - 1] || "Lunes"; // Si es domingo, seleccionamos Lunes
+          },
+          obtenerGuardias(dia, hora) {
+            return this.guardias.filter(
+              (g) =>
+                g.dia.trim().toLowerCase() === dia.trim().toLowerCase() &&
+                g.hora.trim() === hora.trim()
+            );
+          },
+          horasConGuardias(dia) {
+            const horasConGuardias = new Set();
+            this.guardias.forEach((guardia) => {
+              if (
+                guardia.dia.trim().toLowerCase() === dia.trim().toLowerCase()
+              ) {
+                horasConGuardias.add(guardia.hora.trim());
+              }
+            });
+            return Array.from(horasConGuardias);
+          },
+          tieneGuardiasSinFirmar(dia, hora) {
+            return this.obtenerGuardias(dia, hora).some(
+              (g) => !g.registro_firmado
+            );
+          },
+          seleccionarDia(dia) {
+            this.diaSeleccionado = this.diaSeleccionado === dia ? null : dia;
+          },
+          redirigirFormulario(dia, hora) {
+            // Redirige a la página de formulario y pasa los parámetros (dia y hora)
+            window.location.href = `ingresarGuardias.html?dia=${dia}&hora=${hora}`;
+          },
+          obtenerProfesorNombre(profesor_id) {
+            const profesor = this.profesores.find((p) => p.id === profesor_id);
+            return profesor ? profesor.nombre : "Desconocido";
+          },
+        },
+      });
+
+      app.mount("#app");
     </script>
-</body>
+  </body>
 </html>

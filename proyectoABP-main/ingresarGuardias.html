@@ -70,7 +70,6 @@
         /><br /><br />
 
         <button type="submit">Registrar Guardia</button>
-        <button type="button" @click="volverAlIndex">Volver al Index</button>
       </form>
     </div>
 
@@ -81,21 +80,18 @@
             profesores: [], // Lista de profesores
             guardias: [], // Lista de guardias
             nuevaGuardia: {
-              dia: "", // Añadir el campo dia
               hora: "",
               profesor_id: "", // Ahora es el id del profesor
               grupo: "",
               aula: "",
               solucion: "",
               alumnos_problematicos: false,
-              registro_firmado: false,
-              fecha: "", // Añadir el campo fecha
+              firma: false,
             },
           };
         },
         mounted() {
           this.cargarDatos();
-          this.cargarParametrosURL(); // Llamar al método para cargar los parámetros de la URL
         },
         methods: {
           // Cargar datos de los profesores y guardias
@@ -110,14 +106,7 @@
               this.guardias = data;
             });
           },
-          // Cargar parámetros de la URL
-          cargarParametrosURL() {
-            const params = new URLSearchParams(window.location.search);
-            const dia = params.get('dia');
-            if (dia) {
-              this.nuevaGuardia.dia = dia;
-            }
-          },
+
           // Obtener el nombre del profesor por su id
           obtenerProfesorNombre(profesor_id) {
             const profesor = this.profesores.find((p) => p.id === profesor_id);
@@ -127,7 +116,7 @@
           registrarGuardia() {
             const nuevaGuardia = {
               ...this.nuevaGuardia,
-              fecha: new Date().toISOString(), // Añadir la fecha actual
+              firma: false,
             };
 
             // Hacer el POST con JSON
@@ -139,7 +128,6 @@
               success: (data) => {
                 this.guardias.push(data); // Añadir la nueva guardia a la lista
                 this.limpiarFormulario();
-                window.location.href = "index.html"; // Redirigir al index
               },
               error: (jqXHR, textStatus, errorThrown) => {
                 console.log(
@@ -152,20 +140,14 @@
           // Limpiar el formulario después de registrar la guardia
           limpiarFormulario() {
             this.nuevaGuardia = {
-              dia: "", // Añadir el campo dia
               hora: "",
               profesor_id: "",
               grupo: "",
               aula: "",
               solucion: "",
               alumnos_problematicos: false,
-              registro_firmado : false,
-              fecha: "", // Añadir el campo fecha
+              firma: false,
             };
-          },
-          // Método para volver al index
-          volverAlIndex() {
-            window.location.href = "index.html";
           },
         },
       });

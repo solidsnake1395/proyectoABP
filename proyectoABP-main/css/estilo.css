@@ -1,0 +1,262 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Contenedor principal */
+#app {
+    max-width: 90%;
+    width: 90%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+}
+
+/* Logo */
+img {
+    max-width: 150px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+/* Títulos */
+h1, h2 {
+    color: #4a4e69;
+}
+
+/* Estilo de la tabla con divs */
+.table-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+.row {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #4a4e69;
+}
+
+.header .cell {
+    background-color: #4a4e69;
+    color: white;
+    font-weight: bold;
+    padding: 15px;
+}
+
+.cell {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    border-right: 1px solid #4a4e69;
+}
+
+.cell:last-child {
+    border-right: 1px solid #4a4e69;
+}
+
+.cell:first-child {
+    border-left: 1px solid #4a4e69;
+}
+
+/* Estilo para los detalles de la guardia al pasar el ratón */
+.detalle-guardia {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+.cell:hover .detalle-guardia {
+    display: block;
+}
+
+/* Estilo para cuando un día está expandido */
+.expanded {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    padding: 10px;
+}
+
+/* Estilo básico para las celdas de guardias */
+.guardia {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative; /* Necesario para posicionar los detalles */
+}
+
+/* Estilo para las guardias dentro de la misma hora */
+.guardia-item {
+    margin-top: 5px;
+}
+
+
+/* Estilo para los detalles que aparecen al hacer hover */
+.detalles {
+    position: absolute;  /* Posiciona el contenedor de los detalles encima de otros elementos */
+    top: 0;              /* Posiciona los detalles justo encima de la guardia */
+    left: 0;
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar efecto flotante */
+    z-index: 10; /* Asegura que los detalles estén encima de otros elementos */
+}
+
+/* Estilo para el botón de agregar guardia */
+.boton-agregar {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.boton-agregar:hover {
+    background-color: #45a049;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    height: 80vh;
+    transition: all 0.3s ease-in-out;
+}
+
+main > div {
+    width: 18%; /* Espacio normal para cada día */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    transition: all 0.3s ease-in-out; /* Animación fluida */
+    cursor: pointer;
+}
+
+main > div.expanded {
+    width: 40%; /* Aumenta el tamaño del día seleccionado */
+}
+
+main > div:not(.expanded) {
+    width: 12%; /* Reduce los demás días */
+}
+
+.guardia {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: rgb(255, 255, 255);
+}
+
+.sin-firmar {
+    background-color: rgb(221, 177, 177);
+}
+
+/* Formularios */
+form {
+    margin-top: 20px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+/* Botón */
+button {
+    background-color: #4a4e69;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #373a50;
+}
+
+/* Estilo para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    border: 1px solid #4a4e69;
+}
+
+th {
+    background-color: #4a4e69;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+    
+    .cell {
+        text-align: left;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+    }
+}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestion de guardias</title>
     <link rel="stylesheet" href="css/estilo.css" />
+<<<<<<< HEAD
     <link
       rel="icon"
       href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png"
@@ -145,6 +146,120 @@
       });
 
       app.mount("#app");
+=======
+    <link rel="icon" href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Horario de Guardias</h1>
+        <main>
+            <div v-for="dia in dias" :id="dia.toLowerCase()" :key="dia" 
+                 :class="{ 'expanded': dia === diaSeleccionado }"
+                 class="dia"
+                 @click="seleccionarDia(dia)">
+                <strong>{{ dia }}</strong>
+                <!-- Aquí mostramos solo las horas que tienen guardias -->
+                <div v-for="(hora, index) in horas" :key="hora" 
+                     :id="'hora' + (index + 1)" 
+                     class="guardia"
+                     :class="{ 'sin-firmar': tieneGuardiasSinFirmar(dia, hora) }"
+                     @mouseover="horaSeleccionada = { dia, hora }"
+                     @mouseleave="horaSeleccionada = null">
+                    <template v-if="obtenerGuardias(dia, hora).length">
+                        <!-- Solo mostrar las guardias que existen en esta hora -->
+                        <div v-for="guardia in obtenerGuardias(dia, hora)" :key="guardia.id"
+                             class="guardia-item"
+                             @mouseover="mostrarDetalles = guardia"
+                             @mouseleave="mostrarDetalles = null">
+                            {{ obtenerProfesorNombre(guardia.profesor_id) }} ({{ guardia.aula }})
+                            <div v-if="mostrarDetalles === guardia" class="detalles">
+                                <p><strong>Detalles:</strong></p>
+                                <p>Aula: {{ guardia.aula }}</p>
+                                <p>Profesor: {{ obtenerProfesorNombre(guardia.profesor_id) }}</p>
+                                <p>Firma: {{ guardia.registro_firmado ? 'Firmado' : 'No Firmado' }}</p>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <!-- Si no hay guardias, no mostrar nada para esa hora -->
+                        <!-- Esto deja la columna vacía -->
+                    </template>
+
+                    <!-- Botón para agregar una nueva guardia solo aparece en la hora del día seleccionado -->
+                    <button v-if="horaSeleccionada && horaSeleccionada.dia === dia && horaSeleccionada.hora === hora" 
+                            @click="redirigirFormulario(dia, hora)"
+                            class="boton-agregar">
+                        Agregar guardia
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+                    horas: [
+                        "08:30 - 09:25", "09:25 - 10:20", "10:20 - 11:15",
+                        "11:15 - 11:45", "11:45 - 12:40", "12:40 - 13:35", "13:35 - 14:30"
+                    ],
+                    profesores: [],
+                    guardias: [],
+                    diaSeleccionado: null,
+                    mostrarDetalles: null,  // Para mostrar los detalles de la guardia
+                    horaSeleccionada: null  // Para mostrar el botón solo cuando el ratón esté sobre una hora específica
+                };
+            },
+            mounted() {
+                this.cargarDatos();
+                this.setDiaSeleccionado(); // Llamamos a la función para establecer el día seleccionado
+            },
+            methods: {
+                async cargarDatos() {
+                    try {
+                        let responseProfesores = await fetch("http://localhost:3000/profesores");
+                        this.profesores = await responseProfesores.json();
+                        
+                        let responseGuardias = await fetch("http://localhost:3000/guardias");
+                        this.guardias = await responseGuardias.json();
+                    } catch (error) {
+                        console.error("Error cargando datos:", error);
+                    }
+                },
+                setDiaSeleccionado() {
+                    const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+                    const diaActual = new Date().getDay(); // Devuelve el día de la semana (0: Domingo, 1: Lunes, ..., 6: Sábado)
+                    // Ajustamos el valor de día actual para que coincida con nuestro arreglo de días de semana
+                    this.diaSeleccionado = diasSemana[diaActual - 1] || "Lunes"; // Si es domingo, seleccionamos Lunes
+                },
+                obtenerGuardias(dia, hora) {
+                    return this.guardias.filter(g => 
+                        g.dia.trim().toLowerCase() === dia.trim().toLowerCase() && 
+                        g.hora.trim() === hora.trim()
+                    );
+                },
+                tieneGuardiasSinFirmar(dia, hora) {
+                    return this.obtenerGuardias(dia, hora).some(g => !g.registro_firmado);
+                },
+                seleccionarDia(dia) {
+                    this.diaSeleccionado = this.diaSeleccionado === dia ? null : dia;
+                },
+                redirigirFormulario(dia, hora) {
+                    // Redirige a la página de formulario y pasa los parámetros (dia y hora)
+                    window.location.href = `ingresarGuardias.html?dia=${dia}&hora=${hora}`;
+                },
+                obtenerProfesorNombre(profesor_id) {
+                    const profesor = this.profesores.find(p => p.id === profesor_id);
+                    return profesor ? profesor.nombre : "Desconocido";
+                }
+            }
+        });
+
+        app.mount("#app");
+>>>>>>> 382322080840846a8954efeac54ce5c0a0e86e9e
     </script>
   </body>
 </html>

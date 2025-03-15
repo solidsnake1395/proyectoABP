@@ -93,52 +93,8 @@
   ],
   "guardias": [
     {
-<<<<<<< HEAD
       "id": "8107",
       "dia": "Miércoles",
-=======
-      "id": "1",
-      "hora": "08:30 - 09:25",
-      "dia": "Lunes",
-      "profesor_id": "1",
-      "grupo": "1º A",
-      "aula": "A101",
-      "solucion": "Sustitución",
-      "alumnos_problematicos": true,
-      "registro_firmado": true,
-      "profesor": {
-        "id": 1,
-        "nombre": "Ana Martínez",
-        "asignaturas": [
-          "Matemáticas",
-          "Física"
-        ],
-        "grupo": "1º A"
-      }
-    },
-    {
-      "id": "2",
-      "hora": "08:30 - 09:25",
-      "dia": "Lunes",
-      "profesor_id": "2",
-      "grupo": "1º A",
-      "aula": "A102",
-      "solucion": "Sustitución",
-      "alumnos_problematicos": true,
-      "registro_firmado": false,
-      "profesor": {
-        "id": 1,
-        "nombre": "Ana Martínez",
-        "asignaturas": [
-          "Matemáticas",
-          "Física"
-        ],
-        "grupo": "1º A"
-      }
-    },
-    {
-      "id": "80fc",
->>>>>>> 382322080840846a8954efeac54ce5c0a0e86e9e
       "hora": "10:20 - 11:15",
       "profesor_id": "2",
       "grupo": "1",
@@ -233,22 +189,9 @@
       "grupo": "patatas",
       "aula": "101",
       "solucion": "guardia",
-<<<<<<< HEAD
       "alumnos_problematicos": false,
       "registro_firmado": false,
       "fecha": "2025-03-15T17:55:30.356Z"
-=======
-      "alumnos_problematicos": true,
-      "firma": false
-    },
-    {
-      "id": "ca2d",
-      "dia": "Martes",
-      "hora": "08:30 - 09:25",
-      "aula": "A102",
-      "profesor": "Miguel Garcia",
-      "registro_firmado": true
->>>>>>> 382322080840846a8954efeac54ce5c0a0e86e9e
     }
   ]
 }

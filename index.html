@@ -19,15 +19,33 @@
                 <div v-for="(hora, index) in horas" :key="hora" 
                      :id="'hora' + (index + 1)" 
                      class="guardia"
-                     :class="{ 'sin-firmar': tieneGuardiasSinFirmar(dia, hora) }">
+                     :class="{ 'sin-firmar': tieneGuardiasSinFirmar(dia, hora) }"
+                     @mouseover="horaSeleccionada = { dia, hora }"
+                     @mouseleave="horaSeleccionada = null">
                     <template v-if="obtenerGuardias(dia, hora).length">
-                        <div v-for="guardia in obtenerGuardias(dia, hora)" :key="guardia.id">
+                        <div v-for="guardia in obtenerGuardias(dia, hora)" :key="guardia.id"
+                             class="guardia-item"
+                             @mouseover="mostrarDetalles = guardia"
+                             @mouseleave="mostrarDetalles = null">
                             {{ obtenerProfesorNombre(guardia.profesor_id) }} ({{ guardia.aula }})
+                            <div v-if="mostrarDetalles === guardia" class="detalles">
+                                <p><strong>Detalles:</strong></p>
+                                <p>Aula: {{ guardia.aula }}</p>
+                                <p>Profesor: {{ obtenerProfesorNombre(guardia.profesor_id) }}</p>
+                                <p>Firma: {{ guardia.registro_firmado ? 'Firmado' : 'No Firmado' }}</p>
+                            </div>
                         </div>
                     </template>
                     <template v-else>
                         {{ hora }}
                     </template>
+
+                    <!-- Botón para agregar una nueva guardia solo aparece en la hora del día seleccionado -->
+                    <button v-if="horaSeleccionada && horaSeleccionada.dia === dia && horaSeleccionada.hora === hora" 
+                            @click="agregarGuardia(dia, hora)"
+                            class="boton-agregar">
+                        Agregar guardia
+                    </button>
                 </div>
             </div>
         </main>
@@ -44,12 +62,13 @@
                     ],
                     profesores: [],
                     guardias: [],
-                    diaSeleccionado: null
+                    diaSeleccionado: null,
+                    mostrarDetalles: null,  // Para mostrar los detalles de la guardia
+                    horaSeleccionada: null  // Para mostrar el botón solo cuando el ratón esté sobre una hora específica
                 };
             },
             mounted() {
                 this.cargarDatos();
-                this.expandirDiaActual();
             },
             methods: {
                 async cargarDatos() {
@@ -79,24 +98,17 @@
                 seleccionarDia(dia) {
                     this.diaSeleccionado = this.diaSeleccionado === dia ? null : dia;
                 },
-                expandirDiaActual() {
-                    const diasMap = {
-                        1: "Lunes",
-                        2: "Martes",
-                        3: "Miércoles",
-                        4: "Jueves",
-                        5: "Viernes"
-                    };
-                    const hoy = new Date().getDay(); // Devuelve un número del 0 (Domingo) al 6 (Sábado)
-                    if (diasMap[hoy]) {
-                        this.diaSeleccionado = diasMap[hoy]; // Selecciona el día correcto
-                    }
+                agregarGuardia(dia, hora) {
+                    alert(`Aquí agregarías una nueva guardia para el día ${dia} en la hora ${hora}`);
+                    // Aquí podrías abrir un formulario modal para agregar una nueva guardia.
+                    // También podrías hacer una llamada a una API para agregar la nueva guardia al sistema.
                 }
             }
         });
 
         app.mount("#app");
     </script>
+
 
 </body>
 </html>

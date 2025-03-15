@@ -81,6 +81,65 @@ h1, h2 {
     display: block;
 }
 
+/* Estilo para cuando un día está expandido */
+.expanded {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    padding: 10px;
+}
+
+/* Estilo básico para las celdas de guardias */
+.guardia {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative; /* Necesario para posicionar los detalles */
+}
+
+/* Estilo para las guardias dentro de la misma hora */
+.guardia-item {
+    margin-top: 5px;
+}
+
+/* Si la guardia no está firmada */
+.sin-firmar {
+    background-color: #f8d7da; /* Color de fondo para las guardias sin firmar */
+}
+
+/* Estilo para los detalles que aparecen al hacer hover */
+.detalles {
+    position: absolute;  /* Posiciona el contenedor de los detalles encima de otros elementos */
+    top: 0;              /* Posiciona los detalles justo encima de la guardia */
+    left: 0;
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar efecto flotante */
+    z-index: 10; /* Asegura que los detalles estén encima de otros elementos */
+}
+
+/* Estilo para el botón de agregar guardia */
+.boton-agregar {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.boton-agregar:hover {
+    background-color: #45a049;
+}
+
 main {
     display: flex;
     justify-content: space-between;

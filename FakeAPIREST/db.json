@@ -118,7 +118,7 @@
       "dia": "Lunes",
       "profesor_id": "2",
       "grupo": "1º A",
-      "aula": "A101",
+      "aula": "A102",
       "solucion": "Sustitución",
       "alumnos_problematicos": true,
       "registro_firmado": false,
@@ -164,6 +164,14 @@
       "solucion": "guardia",
       "alumnos_problematicos": true,
       "firma": false
+    },
+    {
+      "id": "ca2d",
+      "dia": "Martes",
+      "hora": "08:30 - 09:25",
+      "aula": "A102",
+      "profesor": "Miguel Garcia",
+      "registro_firmado": true
     }
   ]
 }

@@ -81,6 +81,48 @@ h1, h2 {
     display: block;
 }
 
+main {
+    display: flex;
+    justify-content: space-between;
+    height: 80vh;
+    transition: all 0.3s ease-in-out;
+}
+
+main > div {
+    width: 18%; /* Espacio normal para cada día */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    transition: all 0.3s ease-in-out; /* Animación fluida */
+    cursor: pointer;
+}
+
+main > div.expanded {
+    width: 40%; /* Aumenta el tamaño del día seleccionado */
+}
+
+main > div:not(.expanded) {
+    width: 12%; /* Reduce los demás días */
+}
+
+.guardia {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: rgb(202, 238, 177);
+}
+
+.sin-firmar {
+    background-color: rgb(221, 177, 177);
+}
+
 /* Formularios */
 form {
     margin-top: 20px;

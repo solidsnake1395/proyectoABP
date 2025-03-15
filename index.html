@@ -7,34 +7,14 @@
     <link rel="stylesheet" href="css/estilo.css" />
     <link rel="icon" href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        main {
-            display: flex;
-            justify-content: space-between;
-        }
-        main div {
-            width: 18%; /* Distribuye las columnas */
-            padding: 10px;
-            border: 1px solid black;
-            text-align: center;
-        }
-        .guardia {
-            margin: 5px 0;
-            padding: 5px;
-            border: 1px solid #ccc;
-            background-color: rgb(202, 238, 177); /* Verde por defecto */
-        }
-        .sin-firmar {
-            background-color: rgb(221, 177, 177); /* Rojo si no está firmada */
-        }
-    </style>
 </head>
 <body>
     <div id="app">
         <h1>Horario de Guardias</h1>
         <main>
-            <div v-for="dia in dias" :id="dia.toLowerCase()" :key="dia">
+            <div v-for="dia in dias" :id="dia.toLowerCase()" :key="dia" 
+                 :class="{ 'expanded': dia === diaSeleccionado }"
+                 @click="seleccionarDia(dia)">
                 <strong>{{ dia }}</strong>
                 <div v-for="(hora, index) in horas" :key="hora" 
                      :id="'hora' + (index + 1)" 
@@ -63,34 +43,60 @@
                         "11:15 - 11:45", "11:45 - 12:40", "12:40 - 13:35", "13:35 - 14:30"
                     ],
                     profesores: [],
-                    guardias: []
+                    guardias: [],
+                    diaSeleccionado: null
                 };
             },
             mounted() {
                 this.cargarDatos();
+                this.expandirDiaActual();
             },
             methods: {
-                cargarDatos() {
-                    $.get("http://localhost:3000/profesores", (data) => {
-                        this.profesores = data;
-                    });
-                    $.get("http://localhost:3000/guardias", (data) => {
-                        this.guardias = data;
-                    });
+                async cargarDatos() {
+                    try {
+                        let responseProfesores = await fetch("http://localhost:3000/profesores");
+                        this.profesores = await responseProfesores.json();
+                        
+                        let responseGuardias = await fetch("http://localhost:3000/guardias");
+                        this.guardias = await responseGuardias.json();
+                    } catch (error) {
+                        console.error("Error cargando datos:", error);
+                    }
                 },
                 obtenerProfesorNombre(profesor_id) {
                     const profesor = this.profesores.find(p => p.id === profesor_id);
                     return profesor ? profesor.nombre : "Desconocido";
                 },
                 obtenerGuardias(dia, hora) {
-                    return this.guardias.filter(g => g.hora === hora && g.dia === dia);
+                    return this.guardias.filter(g => 
+                        g.dia.trim().toLowerCase() === dia.trim().toLowerCase() && 
+                        g.hora.trim() === hora.trim()
+                    );
                 },
                 tieneGuardiasSinFirmar(dia, hora) {
                     return this.obtenerGuardias(dia, hora).some(g => !g.registro_firmado);
+                },
+                seleccionarDia(dia) {
+                    this.diaSeleccionado = this.diaSeleccionado === dia ? null : dia;
+                },
+                expandirDiaActual() {
+                    const diasMap = {
+                        1: "Lunes",
+                        2: "Martes",
+                        3: "Miércoles",
+                        4: "Jueves",
+                        5: "Viernes"
+                    };
+                    const hoy = new Date().getDay(); // Devuelve un número del 0 (Domingo) al 6 (Sábado)
+                    if (diasMap[hoy]) {
+                        this.diaSeleccionado = diasMap[hoy]; // Selecciona el día correcto
+                    }
                 }
             }
         });
+
         app.mount("#app");
     </script>
+
 </body>
 </html>

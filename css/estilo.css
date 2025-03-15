@@ -1,173 +1,188 @@
 /* Estilos generales */
 body {
-  font-family: "Arial", sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
-  margin: 0;
-  padding: 20px;
-  text-align: center;
-}
-
-#app {
-  max-width: 90%;
-  width: 90%;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
-}
-
-/* Estilo para cuando un día está expandido */
-.expanded {
-  background-color: #f0f0f0;
-  border: 2px solid #ccc;
-  padding: 10px;
-}
-
-/* Estilo básico para las celdas de guardias */
-.guardia {
-  margin: 5px 0;
-  padding: 10px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  position: relative;
-}
-
-.no-firmada {
-  background-color: #e68c8c;
-  color: #a71616;
-  border-color: #f5c6cb;
-}
-
-.firmada {
-  background-color: #d4edda;
-  color: #155724;
-  border-color: #c3e6cb;
-}
-
-.boton-agregar:hover {
-  background-color: #45a049;
-}
-
-.firmar {
-  background-color: #000000;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-main {
-  display: flex;
-  justify-content: space-between;
-  height: 80vh;
-  transition: all 0.3s ease-in-out;
-}
-
-main > div {
-  /*dias*/
-  width: 18%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1px solid black;
-  text-align: center;
-  padding: 10px;
-  transition: all 0.3s ease-in-out;
-}
-
-main > div.expanded {
-  width: 40%;
-}
-
-main > div:not(.expanded) {
-  width: 12%;
-}
-
-.sin-firmar {
-  background-color: rgb(184, 68, 68);
-}
-
-/* Formularios */
-form {
-  margin-top: 20px;
-  text-align: left;
-}
-
-label {
-  font-weight: bold;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-input[type="checkbox"] {
-  width: auto;
-  margin-right: 5px;
-}
-
-/* Botón */
-button {
-  bottom: 10px;
-  right: 10px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #373a50;
-}
-
-.dia {
-  overflow: scroll;
-  overflow-x: hidden;
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
-  .row {
+    font-family: "Arial", sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .dia-seleccionado {
+    width: 70% !important;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .dia-reducido {
+    width: 15% !important;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  #app {
+    max-width: 90%;
+    width: 90%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+  }
+  
+  /* Estilo para cuando un día está expandido */
+  .expanded {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    padding: 10px;
+  }
+  
+  /* Estilo básico para las celdas de guardias */
+  .guardia {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .no-firmada {
+    background-color: #e68c8c;
+    color: #a71616;
+    border-color: #f5c6cb;
+  }
+  
+  .firmada {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+  }
+  
+  .boton-agregar:hover {
+    background-color: #45a049;
+  }
+  
+  .firmar {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  main {
+    display: flex;
+    justify-content: space-between;
+    height: 80vh;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  main > div {
+    /*dias*/
+    width: 18%;
+    display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
   }
-
-  .cell {
+  
+  main > div.expanded {
+    width: 40%;
+  }
+  
+  main > div:not(.expanded) {
+    width: 12%;
+  }
+  
+  .sin-firmar {
+    background-color: rgb(184, 68, 68);
+  }
+  
+  /* Formularios */
+  form {
+    margin-top: 20px;
     text-align: left;
-    font-size: 16px;
   }
-
-  button {
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input,
+  select {
     width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
   }
-}
-
-/* Estilo para la barra de desplazamiento */
-::-webkit-scrollbar {
-  width: 3px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+  
+  input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+  }
+  
+  /* Botón */
+  button {
+    bottom: 10px;
+    right: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #373a50;
+  }
+  
+  .dia {
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 768px) {
+    main {
+      flex-direction: column;
+      height: auto;
+    }
+  
+    main > div {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .dia-seleccionado {
+      width: 100% !important;
+    }
+  
+    .dia-reducido {
+      width: 100% !important;
+    }
+  }
+  
+  /* Estilo para la barra de desplazamiento */
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

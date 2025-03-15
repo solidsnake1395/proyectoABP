@@ -179,8 +179,9 @@
       "aula": "cebollas",
       "solucion": "puerros",
       "alumnos_problematicos": false,
-      "registro_firmado": false,
-      "fecha": "2025-03-15T17:41:18.108Z"
+      "registro_firmado": true,
+      "fecha": "2025-03-15T17:41:18.108Z",
+      "sustituto_id": "3"
     },
     {
       "id": "5abe",
@@ -193,6 +194,30 @@
       "alumnos_problematicos": false,
       "registro_firmado": false,
       "fecha": "2025-03-15T17:55:30.356Z"
+    },
+    {
+      "id": "1e15",
+      "dia": "Jueves",
+      "hora": "11:15 - 11:45",
+      "profesor_id": "2",
+      "grupo": "1",
+      "aula": "cebollas",
+      "solucion": "wer",
+      "alumnos_problematicos": false,
+      "registro_firmado": false,
+      "fecha": "2025-03-15T18:38:59.217Z"
+    },
+    {
+      "id": "4c4d",
+      "dia": "Viernes",
+      "hora": "11:15 - 11:45",
+      "profesor_id": "4",
+      "grupo": "patatas",
+      "aula": "101",
+      "solucion": "guardia",
+      "alumnos_problematicos": false,
+      "registro_firmado": false,
+      "fecha": "2025-03-15T18:39:07.656Z"
     }
   ]
 }

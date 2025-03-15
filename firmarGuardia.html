@@ -6,7 +6,7 @@
     <title>Firmar Guardia</title>
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="icon" href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" type="image/x-icon">
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.prod.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -44,7 +44,7 @@
                 },
                 cargarParametrosURL() {
                     const params = new URLSearchParams(window.location.search);
-                    this.guardiaId = params.get('id');
+                    this.guardiaId = params.get('guardia_id');
                 },
                 firmarGuardia() {
                     if (this.guardiaId && this.profesorSeleccionado) {

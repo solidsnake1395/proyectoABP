@@ -36,7 +36,8 @@
               >Firmada por: {{ obtenerProfesorNombre(guardia.sustituto_id)
               }}</span
             >
-            <button class="firmar"
+            <button
+              class="firmar"
               v-if="!guardia.registro_firmado"
               @click="redirigirFirmarGuardia(guardia.id)"
             >
@@ -136,6 +137,11 @@
           redirigirFormulario(dia, hora) {
             // Redirige a la página de formulario y pasa los parámetros (dia y hora)
             window.location.href = `ingresarGuardias.html?dia=${dia}&hora=${hora}`;
+          },
+
+          redirigirFirmarGuardia(guardia_id) {
+            // Redirige a la página de formulario y pasa el parámetro (guardia_id)
+            window.location.href = `firmarGuardia.html?guardia_id=${guardia_id}`;
           },
           obtenerProfesorNombre(profesor_id) {
             const profesor = this.profesores.find((p) => p.id === profesor_id);

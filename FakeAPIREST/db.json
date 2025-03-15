@@ -114,8 +114,9 @@
       "aula": "cebollas",
       "solucion": "wer",
       "alumnos_problematicos": false,
-      "registro_firmado": false,
-      "fecha": "2025-03-15T17:40:00.150Z"
+      "registro_firmado": true,
+      "fecha": "2025-03-15T17:40:00.150Z",
+      "sustituto_id": "2"
     },
     {
       "id": "a123",
@@ -152,9 +153,9 @@
       "aula": "104",
       "solucion": "guardia",
       "alumnos_problematicos": true,
-      "registro_firmado": false,
+      "registro_firmado": true,
       "fecha": "2025-03-18T10:00:00.000Z",
-      "sustituto_id": "7"
+      "sustituto_id": "2"
     },
     {
       "id": "164d",

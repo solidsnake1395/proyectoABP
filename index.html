@@ -5,39 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Horario de Guardias</title>
     <link rel="stylesheet" href="css/estilo.css" />
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="icon" href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        main {
+            display: flex;
+            justify-content: space-between;
+        }
+        main div {
+            width: 18%; /* Distribuye las columnas */
+            padding: 10px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        .guardia {
+            margin: 5px 0;
+            padding: 5px;
+            border: 1px solid #ccc;
+            background-color: rgb(202, 238, 177); /* Verde por defecto */
+        }
+        .sin-firmar {
+            background-color: rgb(221, 177, 177); /* Rojo si no está firmada */
+        }
+    </style>
 </head>
 <body>
     <div id="app">
         <h1>Horario de Guardias</h1>
-        <div class="table-container">
-            <!-- Encabezado -->
-            <div class="row header">
-                <div class="cell">Hora</div>
-                <div class="cell" v-for="dia in dias" :key="dia">{{ dia }}</div>
-            </div>
-            <!-- Filas de datos -->
-            <div class="row" v-for="hora in horas" :key="hora">
-                <div class="cell">{{ hora }}</div>
-                <div class="cell" v-for="dia in dias" :key="dia" 
-                     :style="{
-                        backgroundColor: obtenerColorGuardias(dia, hora)
-                     }">
-                    <div v-for="guardia in obtenerGuardias(dia, hora)" :key="guardia.id"
-                         @mouseover="mostrarDetalle(guardia)" @mouseleave="ocultarDetalle">
-                        {{ obtenerProfesorNombre(guardia.profesor_id) }} ({{ guardia.aula }})
-                        <div v-if="guardiaSeleccionada && guardiaSeleccionada.id === guardia.id" 
-                             class="detalle-guardia">
-                            <p>Profesor: {{ obtenerProfesorNombre(guardia.profesor_id) }}</p>
-                            <p>Aula: {{ guardia.aula }}</p>
-                            <p>Solución: {{ guardia.solucion }}</p>
-                            <p>Firmada: {{ guardia.registro_firmado ? 'Sí' : 'No' }}</p>
+        <main>
+            <div v-for="dia in dias" :id="dia.toLowerCase()" :key="dia">
+                <strong>{{ dia }}</strong>
+                <div v-for="(hora, index) in horas" :key="hora" 
+                     :id="'hora' + (index + 1)" 
+                     class="guardia"
+                     :class="{ 'sin-firmar': tieneGuardiasSinFirmar(dia, hora) }">
+                    <template v-if="obtenerGuardias(dia, hora).length">
+                        <div v-for="guardia in obtenerGuardias(dia, hora)" :key="guardia.id">
+                            {{ obtenerProfesorNombre(guardia.profesor_id) }} ({{ guardia.aula }})
                         </div>
-                    </div>
+                    </template>
+                    <template v-else>
+                        {{ hora }}
+                    </template>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -50,8 +63,7 @@
                         "11:15 - 11:45", "11:45 - 12:40", "12:40 - 13:35", "13:35 - 14:30"
                     ],
                     profesores: [],
-                    guardias: [],
-                    guardiaSeleccionada: null
+                    guardias: []
                 };
             },
             mounted() {
@@ -73,17 +85,8 @@
                 obtenerGuardias(dia, hora) {
                     return this.guardias.filter(g => g.hora === hora && g.dia === dia);
                 },
-                obtenerColorGuardias(dia, hora) {
-                    const guardias = this.obtenerGuardias(dia, hora);
-                    // Verificar si alguna guardia no está firmada
-                    const tieneGuardiasSinFirmar = guardias.some(guardia => !guardia.registro_firmado);
-                    return tieneGuardiasSinFirmar ? 'rgb(221, 177, 177)' : 'rgb(202, 238, 177)';
-                },
-                mostrarDetalle(guardia) {
-                    this.guardiaSeleccionada = guardia;
-                },
-                ocultarDetalle() {
-                    this.guardiaSeleccionada = null;
+                tieneGuardiasSinFirmar(dia, hora) {
+                    return this.obtenerGuardias(dia, hora).some(g => !g.registro_firmado);
                 }
             }
         });

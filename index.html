@@ -12,220 +12,28 @@
             type="image/x-icon"
         />
         <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.js"></script>
-        <style>
-            .container-dias {
-                display: flex;
-                flex-wrap: nowrap;
-                gap: 12px;
-                width: 100%;
-                margin-bottom: 24px;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
-            
-            .day-card {
-                transition: all 0.35s ease-in-out;
-                height: 500px;
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                position: relative;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                border-radius: 0.5rem;
-                border: 1px solid #e5e7eb;
-                background-color: white;
-            }
-            
-            .day-card:hover {
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            }
-            
-            .expanded {
-                flex: 5;
-                min-width: 0;
-                z-index: 10;
-            }
-            
-            .collapsed {
-                flex: 1;
-                min-width: 120px;
-            }
-            
-            .card-content {
-                flex: 1;
-                overflow-y: auto;
-                padding: 16px;
-                scrollbar-width: thin;
-                scrollbar-color: #4F46E5 #EEF2FF;
-            }
-            
-            .card-content::-webkit-scrollbar {
-                width: 8px;
-            }
-            
-            .card-content::-webkit-scrollbar-track {
-                background: #EEF2FF;
-                border-radius: 10px;
-            }
-            
-            .card-content::-webkit-scrollbar-thumb {
-                background: #818CF8;
-                border-radius: 10px;
-            }
-            
-            .collapsed-content {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-            }
-            
-            .collapsed-header {
-                padding: 1rem;
-                text-align: center;
-                font-weight: bold;
-                font-size: 1.25rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .collapsed-body {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 1rem 0.5rem;
-                background-color: rgba(79, 70, 229, 0.04);
-                border-top: 1px solid rgba(79, 70, 229, 0.15);
-            }
-            
-            .guardia-info {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 0.75rem 0;
-            }
-            
-            .guardia-count {
-                font-size: 2.25rem;
-                font-weight: bold;
-                color: #4F46E5;
-                line-height: 1;
-                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            }
-            
-            .guardia-label {
-                font-size: 0.875rem;
-                font-weight: 500;
-                color: #6B7280;
-                margin-top: 0.25rem;
-            }
-            
-            .pending-badge {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background-color: #EF4444;
-                color: white;
-                border-radius: 9999px;
-                padding: 0.25rem 0.75rem;
-                font-size: 0.75rem;
-                font-weight: 600;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                z-index: 20;
-            }
-            
-            .day-indicator {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 4px;
-            }
-            
-            .today {
-                background-color: #10B981;
-            }
-            
-            .guardia-card {
-                transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            }
-            
-            .guardia-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            }
-            
-            @media (max-width: 1280px) {
-                .day-card {
-                    height: 450px;
-                }
-                
-                .expanded {
-                    flex: 3;
-                }
-            }
-            
-            @media (max-width: 768px) {
-                .container-dias {
-                    flex-direction: column;
-                }
-                
-                .day-card {
-                    width: 100%;
-                }
-                
-                .expanded {
-                    flex: none;
-                    min-height: 450px;
-                    margin-bottom: 15px;
-                }
-                
-                .collapsed {
-                    flex: none;
-                    height: 100px;
-                    margin-bottom: 10px;
-                }
-                
-                .collapsed-content {
-                    flex-direction: row;
-                    align-items: center;
-                }
-                
-                .collapsed-header {
-                    width: 120px;
-                    border-right: 1px solid rgba(79, 70, 229, 0.15);
-                    height: 100%;
-                }
-                
-                .collapsed-body {
-                    flex: 1;
-                    flex-direction: row;
-                    justify-content: space-around;
-                    border-top: none;
-                    padding: 0 1rem;
-                }
-                
-                .guardia-info {
-                    padding: 0;
-                    margin: 0 10px;
-                }
-                
-                .pending-badge {
-                    position: static;
-                    margin-top: 5px;
-                    margin-left: 5px;
-                    display: inline-block;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="css/estiloIndex.css" />
     </head>
     <body class="bg-gray-100 text-gray-800 min-h-screen">
         <header class="bg-gradient-to-r from-indigo-700 to-indigo-900 text-white py-4 shadow-md">
             <div class="max-w-screen-xl mx-auto px-4">
                 <h1 class="text-3xl font-bold">Horario de Guardias</h1>
                 <p class="mt-1 text-indigo-200">Sistema de gestión de guardias docentes</p>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+                <button
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200 flex items-center"
+                    @click="cambiarSemana(-1)"
+                >
+                    Semana anterior
+                </button>
+                <span class="text-lg font-semibold">{{ semanaSeleccionada.toLocaleDateString() }}</span>
+                <button
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200 flex items-center"
+                    @click="cambiarSemana(1)"
+                >
+                    Semana siguiente
+                </button>
             </div>
         </header>
         
@@ -421,134 +229,8 @@
             </div>
         </footer>
         
-        <script>
-            function getWeekRange(date) {
-                const startOfWeek = new Date(date);
-                const endOfWeek = new Date(date);
-                
-                // Set startOfWeek to the previous Monday
-                startOfWeek.setDate(date.getDate() - date.getDay() + 1);
-                
-                // Set endOfWeek to the next Sunday
-                endOfWeek.setDate(date.getDate() - date.getDay() + 7);
-                
-                // Set the time to the start of the day for startOfWeek
-                startOfWeek.setHours(0, 0, 0, 0);
-                
-                // Set the time to the end of the day for endOfWeek
-                endOfWeek.setHours(23, 59, 59, 999);
-                
-                return { startOfWeek, endOfWeek };
-            }
-
-            function parseSpanishDate(dateString) {
-                try {
-                    const [datePart, timePart] = dateString.split(', ');
-                    const [day, month, year] = datePart.split('/');
-                    return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}`);
-                } catch (error) {
-                    console.error(`Error parsing date: ${dateString}`, error);
-                    return new Date();
-                }
-            }
-
-            const app = Vue.createApp({
-                data() {
-                    return {
-                        dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-                        horas: [
-                            "08:30 - 09:25",
-                            "09:25 - 10:20",
-                            "10:20 - 11:15",
-                            "11:15 - 11:45",
-                            "11:45 - 12:40",
-                            "12:40 - 13:35",
-                            "13:35 - 14:30",
-                        ],
-                        profesores: [],
-                        guardias: [],
-                        diaSeleccionado: null,
-                        mostrarDetalles: null,
-                        horaSeleccionada: null,
-                        cargando: false
-                    };
-                },
-                mounted() {
-                    this.cargarDatos();
-                    this.setDiaSeleccionado();
-                },
-                methods: {
-                    async cargarDatos() {
-                        this.cargando = true;
-                        try {
-                            let responseProfesores = await fetch("http://localhost:3000/profesores");
-                            this.profesores = await responseProfesores.json();
-
-                            let responseGuardias = await fetch("http://localhost:3000/guardias");
-                            let guardias = await responseGuardias.json();
-
-                            this.guardias = guardias;
-
-                            const { startOfWeek, endOfWeek } = getWeekRange(new Date());
-                           /* this.guardias = guardias.filter((guardia) => {
-                                const fechaGuardia = parseSpanishDate(guardia.fecha);
-                                return fechaGuardia >= startOfWeek && fechaGuardia <= endOfWeek;
-                            });*/
-                            
-                            this.guardias.sort((a, b) => {
-                                if (!a.registro_firmado && b.registro_firmado) return -1;
-                                if (a.registro_firmado && !b.registro_firmado) return 1;
-                                return 0;
-                            });
-                        } catch (error) {
-                            console.error("Error cargando datos:", error);
-                        } finally {
-                            this.cargando = false;
-                        }
-                    },
-                    setDiaSeleccionado() {
-                        const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-                        const diaActual = new Date().getDay();
-                        this.diaSeleccionado = diaActual === 0 || diaActual === 6 ? "Lunes" : diasSemana[diaActual - 1];
-                    },
-                    esDiaActual(dia) {
-                        const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-                        const diaActual = new Date().getDay();
-                        if (diaActual === 0 || diaActual === 6) return false;
-                        return diasSemana[diaActual - 1] === dia;
-                    },
-                    obtenerGuardias(dia) {
-                        return this.guardias.filter((g) => g.dia.trim().toLowerCase() === dia.trim().toLowerCase());
-                    },
-                    obtenerPendientes(dia) {
-                        return this.obtenerGuardias(dia).filter(g => !g.registro_firmado).length;
-                    },
-                    obtenerCompletadas(dia) {
-                        return this.obtenerGuardias(dia).filter(g => g.registro_firmado).length;
-                    },
-                    obtenerTotalPendientes() {
-                        return this.guardias.filter(g => !g.registro_firmado).length;
-                    },
-                    obtenerTotalCompletadas() {
-                        return this.guardias.filter(g => g.registro_firmado).length;
-                    },
-                    seleccionarDia(dia) {
-                        this.diaSeleccionado = this.diaSeleccionado === dia ? null : dia;
-                    },
-                    redirigirFormulario(dia, hora) {
-                        window.location.href = `ingresarGuardias.html?dia=${dia}&hora=${hora}`;
-                    },
-                    redirigirFirmarGuardia(guardia_id) {
-                        window.location.href = `firmarGuardia.html?guardia_id=${guardia_id}`;
-                    },
-                    obtenerProfesorNombre(profesor_id) {
-                        const profesor = this.profesores.find((p) => p.id === profesor_id);
-                        return profesor ? profesor.nombre : "Desconocido";
-                    },
-                },
-            });
-
-            app.mount("#app");
-        </script>
+        <script src="script.js">
+            
+            </script>
     </body>
 </html>

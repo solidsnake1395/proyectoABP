@@ -77,7 +77,13 @@ const app = Vue.createApp({
         setDiaSeleccionado() {
             const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
             const diaActual = new Date().getDay();
-            this.diaSeleccionado = diaActual === 0 || diaActual === 6 ? "Lunes" : diasSemana[diaActual - 1];
+            if (diaActual === 0 || diaActual === 6) {
+                // Si es domingo (0) o sábado (6), saltar a la semana siguiente
+                this.cambiarSemana(1);
+                this.diaSeleccionado = "Lunes";
+            } else {
+                this.diaSeleccionado = diasSemana[diaActual - 1];
+            }
         },
         esDiaActual(dia) {
             const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];

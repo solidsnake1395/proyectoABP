@@ -119,6 +119,20 @@
       "dia": "Lunes",
       "fecha_creacion": "16/03/2025, 22:39:07",
       "fecha_guardia_formateada": "03/03/2025"
+    },
+    {
+      "id": "bced",
+      "fecha_guardia": "2025-03-17",
+      "hora": "09:25 - 10:20",
+      "profesor_id": "5",
+      "grupo": "ewwe",
+      "aula": "cebollas",
+      "solucion": "ssss",
+      "alumnos_problematicos": false,
+      "registro_firmado": false,
+      "dia": "Lunes",
+      "fecha_creacion": "16/03/2025, 22:44:24",
+      "fecha_guardia_formateada": "17/03/2025"
     }
   ]
 }

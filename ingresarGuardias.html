@@ -1,3 +1,4 @@
+dias.html -->
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -16,6 +17,17 @@
       <!-- Formulario para Añadir Guardia -->
       <h2>Registrar Guardia</h2>
       <form @submit.prevent="registrarGuardia">
+        <!-- Selector de fecha específica -->
+        <label for="fecha_guardia">Fecha de guardia:</label>
+        <input 
+          type="date" 
+          id="fecha_guardia" 
+          v-model="nuevaGuardia.fecha_guardia"
+          @change="actualizarDiaSemana"
+          required
+        /><br />
+        <small>Día: {{ diaSemanaTexto }}</small><br /><br />
+
         <label for="hora">Hora:</label>
         <select id="hora" v-model="nuevaGuardia.hora" required>
             <option value="08:30 - 09:25">08:30 - 09:25</option>
@@ -81,23 +93,41 @@
             profesores: [], // Lista de profesores
             guardias: [], // Lista de guardias
             nuevaGuardia: {
-              dia: "", // Añadir el campo dia
+              fecha_guardia: "", // Fecha específica de la guardia
               hora: "",
-              profesor_id: "", // Ahora es el id del profesor
+              profesor_id: "",
               grupo: "",
               aula: "",
               solucion: "",
               alumnos_problematicos: false,
-              registro_firmado: false,
-              fecha: "", // Añadir el campo fecha
+              registro_firmado: false
             },
+            diaSemanaTexto: "" // Para mostrar el día de la semana correspondiente a la fecha
           };
         },
         mounted() {
           this.cargarDatos();
-          this.cargarParametrosURL(); // Llamar al método para cargar los parámetros de la URL
+          this.cargarParametrosURL();
+          this.establecerFechaHoy(); // Establecer fecha de hoy por defecto
         },
         methods: {
+          // Establecer fecha de hoy en el campo de fecha
+          establecerFechaHoy() {
+            const hoy = new Date();
+            const fechaHoy = hoy.toISOString().split('T')[0]; // Formato YYYY-MM-DD para input date
+            this.nuevaGuardia.fecha_guardia = fechaHoy;
+            this.actualizarDiaSemana(); // Actualizar el texto del día de la semana
+          },
+          
+          // Actualizar el texto del día de la semana basado en la fecha seleccionada
+          actualizarDiaSemana() {
+            if (!this.nuevaGuardia.fecha_guardia) return;
+            
+            const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            const fecha = new Date(this.nuevaGuardia.fecha_guardia);
+            this.diaSemanaTexto = diasSemana[fecha.getDay()];
+          },
+          
           // Cargar datos de los profesores y guardias
           cargarDatos() {
             // Obtener los datos de los profesores
@@ -110,14 +140,46 @@
               this.guardias = data;
             });
           },
+          
           // Cargar parámetros de la URL
           cargarParametrosURL() {
             const params = new URLSearchParams(window.location.search);
             const dia = params.get('dia');
+            const hora = params.get('hora');
+            
+            // Si viene un día en la URL, ajustamos la fecha al próximo día de ese tipo
             if (dia) {
-              this.nuevaGuardia.dia = dia;
+              this.ajustarFechaPorDia(dia);
+            }
+            
+            if (hora) {
+              this.nuevaGuardia.hora = hora;
             }
           },
+          
+          // Ajustar la fecha según el día de la semana seleccionado
+          ajustarFechaPorDia(nombreDia) {
+            const diasMap = { 
+              "Domingo": 0, "Lunes": 1, "Martes": 2, 
+              "Miércoles": 3, "Jueves": 4, "Viernes": 5, "Sábado": 6 
+            };
+            const hoy = new Date();
+            const diaActual = hoy.getDay();
+            const diaSolicitado = diasMap[nombreDia];
+            
+            // Calcular días de diferencia
+            let diferencia = diaSolicitado - diaActual;
+            if (diferencia < 0) {
+              diferencia += 7; // Si es negativo, significa que es la próxima semana
+            }
+            
+            // Ajustar la fecha
+            const fechaAjustada = new Date();
+            fechaAjustada.setDate(hoy.getDate() + diferencia);
+            this.nuevaGuardia.fecha_guardia = fechaAjustada.toISOString().split('T')[0];
+            this.actualizarDiaSemana();
+          },
+          
           // Obtener el nombre del profesor por su id
           obtenerProfesorNombre(profesor_id) {
             const profesor = this.profesores.find((p) => p.id === profesor_id);
@@ -125,10 +187,44 @@
           },
 
           registrarGuardia() {
+            // Verificar que la fecha está seleccionada
+            if (!this.nuevaGuardia.fecha_guardia) {
+              alert("Por favor, selecciona una fecha para la guardia");
+              return;
+            }
+            
+            // Formatear la fecha de creación en formato español (DD/MM/YYYY, HH:MM:SS)
+            const hoy = new Date();
+            const dia = hoy.getDate().toString().padStart(2, '0');
+            const mes = (hoy.getMonth() + 1).toString().padStart(2, '0');
+            const anio = hoy.getFullYear();
+            const hora = hoy.getHours().toString().padStart(2, '0');
+            const minuto = hoy.getMinutes().toString().padStart(2, '0');
+            const segundo = hoy.getSeconds().toString().padStart(2, '0');
+            
+            const fechaFormateada = `${dia}/${mes}/${anio}, ${hora}:${minuto}:${segundo}`;
+
+            // Formatear la fecha de guardia en formato español (DD/MM/YYYY)
+            const fechaGuardiaObj = new Date(this.nuevaGuardia.fecha_guardia);
+            const diaGuardia = fechaGuardiaObj.getDate().toString().padStart(2, '0');
+            const mesGuardia = (fechaGuardiaObj.getMonth() + 1).toString().padStart(2, '0');
+            const anioGuardia = fechaGuardiaObj.getFullYear();
+            
+            const fechaGuardiaFormateada = `${diaGuardia}/${mesGuardia}/${anioGuardia}`;
+            
+            // Determinar el día de la semana a partir de la fecha
+            const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            const diaSemana = diasSemana[fechaGuardiaObj.getDay()];
+
             const nuevaGuardia = {
               ...this.nuevaGuardia,
-              fecha: new Date().toLocaleString(), // Añadir la fecha actual
+              dia: diaSemana, // Extraemos el día de la semana de la fecha
+              fecha_creacion: fechaFormateada, // Fecha de creación con formato español
+              fecha_guardia_formateada: fechaGuardiaFormateada // Fecha de la guardia con formato español
             };
+
+            // Mostrar datos que se van a enviar (útil para depuración)
+            console.log("Registrando nueva guardia:", nuevaGuardia);
 
             // Hacer el POST con JSON
             $.ajax({
@@ -137,32 +233,34 @@
               contentType: "application/json", // Establecer el tipo de contenido como JSON
               data: JSON.stringify(nuevaGuardia), // Convertir los datos a JSON
               success: (data) => {
+                console.log("Guardia registrada exitosamente:", data);
                 this.guardias.push(data); // Añadir la nueva guardia a la lista
                 this.limpiarFormulario();
                 window.location.href = "index.html"; // Redirigir al index
               },
               error: (jqXHR, textStatus, errorThrown) => {
-                console.log(
-                  "Error al registrar la guardia:",
-                  jqXHR.responseText
-                ); // Mostrar el error
+                console.error("Error al registrar la guardia:", jqXHR.responseText);
+                alert("Error al registrar la guardia. Por favor, inténtalo de nuevo.");
               },
             });
           },
+          
           // Limpiar el formulario después de registrar la guardia
           limpiarFormulario() {
+            const fechaActual = this.nuevaGuardia.fecha_guardia;
+            
             this.nuevaGuardia = {
-              dia: "", // Añadir el campo dia
+              fecha_guardia: fechaActual, // Mantener la fecha seleccionada para conveniencia
               hora: "",
               profesor_id: "",
               grupo: "",
               aula: "",
               solucion: "",
               alumnos_problematicos: false,
-              registro_firmado : false,
-              fecha: "", // Añadir el campo fecha
+              registro_firmado: false
             };
           },
+          
           // Método para volver al index
           volverAlIndex() {
             window.location.href = "index.html";

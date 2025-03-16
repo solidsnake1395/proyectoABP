@@ -1,27 +1,22 @@
 function getWeekRange(date) {
+    let day = date.getDay();
+    if (day === 0) day = 7; // Tratar domingo como día 7
+
     const startOfWeek = new Date(date);
-    const endOfWeek = new Date(date);
-    
-    // Set startOfWeek to the previous Monday
-    startOfWeek.setDate(date.getDate() - date.getDay() + 1);
-    
-    // Set endOfWeek to the next Sunday
-    endOfWeek.setDate(date.getDate() - date.getDay() + 7);
-    
-    // Set the time to the start of the day for startOfWeek
+    startOfWeek.setDate(date.getDate() - day + 1);
     startOfWeek.setHours(0, 0, 0, 0);
-    
-    // Set the time to the end of the day for endOfWeek
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(endOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
-    
+
     return { startOfWeek, endOfWeek };
 }
 
 function parseSpanishDate(dateString) {
     try {
-        const [datePart, timePart] = dateString.split(', ');
-        const [day, month, year] = datePart.split('/');
-        return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}`);
+        const [day, month, year] = dateString.split('/');
+        return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
     } catch (error) {
         console.error(`Error parsing date: ${dateString}`, error);
         return new Date();
@@ -43,16 +38,23 @@ const app = Vue.createApp({
             ],
             profesores: [],
             guardias: [],
+            guardiasFiltradas: [],
             diaSeleccionado: null,
             mostrarDetalles: null,
             horaSeleccionada: null,
             cargando: false,
-            semanaSeleccionada: new Date() // Nuevo campo para la semana seleccionada
+            semanaSeleccionada: new Date()
         };
     },
     mounted() {
         this.cargarDatos();
         this.setDiaSeleccionado();
+    },
+    computed: {
+        rangoSemana() {
+            const { startOfWeek, endOfWeek } = getWeekRange(this.semanaSeleccionada);
+            return `${startOfWeek.toLocaleDateString()} - ${endOfWeek.toLocaleDateString()}`;
+        }
     },
     methods: {
         async cargarDatos() {
@@ -65,7 +67,6 @@ const app = Vue.createApp({
                 let guardias = await responseGuardias.json();
 
                 this.guardias = guardias;
-
                 this.filtrarGuardiasPorSemana();
             } catch (error) {
                 console.error("Error cargando datos:", error);
@@ -85,7 +86,7 @@ const app = Vue.createApp({
             return diasSemana[diaActual - 1] === dia;
         },
         obtenerGuardias(dia) {
-            return this.guardias.filter((g) => g.dia.trim().toLowerCase() === dia.trim().toLowerCase());
+            return this.guardiasFiltradas.filter((g) => g.dia.trim().toLowerCase() === dia.trim().toLowerCase());
         },
         obtenerPendientes(dia) {
             return this.obtenerGuardias(dia).filter(g => !g.registro_firmado).length;
@@ -94,10 +95,10 @@ const app = Vue.createApp({
             return this.obtenerGuardias(dia).filter(g => g.registro_firmado).length;
         },
         obtenerTotalPendientes() {
-            return this.guardias.filter(g => !g.registro_firmado).length;
+            return this.guardiasFiltradas.filter(g => !g.registro_firmado).length;
         },
         obtenerTotalCompletadas() {
-            return this.guardias.filter(g => g.registro_firmado).length;
+            return this.guardiasFiltradas.filter(g => g.registro_firmado).length;
         },
         seleccionarDia(dia) {
             this.diaSeleccionado = this.diaSeleccionado === dia ? null : dia;
@@ -115,15 +116,16 @@ const app = Vue.createApp({
         filtrarGuardiasPorSemana() {
             const { startOfWeek, endOfWeek } = getWeekRange(this.semanaSeleccionada);
             this.guardiasFiltradas = this.guardias.filter((guardia) => {
-                const fechaGuardia = parseSpanishDate(guardia.fecha);
+                const fechaGuardia = parseSpanishDate(guardia.fecha_guardia_formateada);
                 return fechaGuardia >= startOfWeek && fechaGuardia <= endOfWeek;
             });
         },
         cambiarSemana(direccion) {
             const nuevaFecha = new Date(this.semanaSeleccionada);
-            nuevaFecha.setDate(nuevaFecha.getDate() + (direccion * 7));
+            nuevaFecha.setDate(nuevaFecha.getDate() + direccion * 7);
             this.semanaSeleccionada = nuevaFecha;
-            this.cargarDatos();
+            // Vuelve a filtrar en vez de recargar todo, si ya has cargado las guardias:
+            this.filtrarGuardiasPorSemana();
         }
     },
 });

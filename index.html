@@ -23,18 +23,21 @@
                 :class="['dia', { 'dia-seleccionado': dia === diaSeleccionado, 'dia-reducido': dia !== diaSeleccionado && diaSeleccionado !== null }]"
                 @click="seleccionarDia(dia)"
             >
-                <h2>{{ dia }}</h2>
-                <div v-for="hora in horasConGuardias(dia)" :key="hora" class="hora">
+                <div class="dia-header">
+                    <h2>{{ dia }}</h2>
+                </div>
+                
+                <div class="guardias-container">
                     <div
-                        v-for="guardia in obtenerGuardias(dia, hora).sort((a, b) => {
-                                        if (!a.registro_firmado && b.registro_firmado) return -1;
-                                        if (a.registro_firmado && !b.registro_firmado) return 1;
-                                        return 0; // Si ambos tienen el mismo estado de firma, no cambiar el orden
+                        v-for="guardia in obtenerGuardias(dia).sort((a, b) => {
+                                    if (!a.registro_firmado && b.registro_firmado) return -1;
+                                    if (a.registro_firmado && !b.registro_firmado) return 1;
+                                    return 0; // Si ambos tienen el mismo estado de firma, no cambiar el orden
                                 })"
                         :key="guardia.id"
                         :class="['guardia', { 'no-firmada': !guardia.registro_firmado, 'firmada': guardia.registro_firmado }]"
                     >
-                        <h3>{{ hora }}</h3>
+                        <h3>{{ guardia.hora }}</h3>
                         <p>Profesor: {{ obtenerProfesorNombre(guardia.profesor_id) }}</p>
                         <p v-if="!guardia.registro_firmado">Firmado: No</p>
                         <span v-if="guardia.registro_firmado"
@@ -44,13 +47,16 @@
                         <button
                             class="firmar"
                             v-if="!guardia.registro_firmado"
-                            @click="redirigirFirmarGuardia(guardia.id)"
+                            @click.stop="redirigirFirmarGuardia(guardia.id)"
                         >
                             Firmar Guardia
                         </button>
                     </div>
                 </div>
-                <button @click="redirigirFormulario(dia, null)">Crear guardia</button>
+                
+                <div class="dia-footer">
+                    <button @click.stop="redirigirFormulario(dia, null)">Crear guardia</button>
+                </div>
             </div>
         </main>
         <script>
@@ -70,10 +76,21 @@
                 // Set the time to the end of the day for endOfWeek
                 endOfWeek.setHours(23, 59, 59, 999);
                 
-
-                console.log(startOfWeek, endOfWeek);
-
                 return { startOfWeek, endOfWeek };
+            }
+
+            function parseSpanishDate(dateString) {
+                try {
+                    // Formato esperado: "15/3/2025, 20:19:35"
+                    const [datePart, timePart] = dateString.split(', ');
+                    const [day, month, year] = datePart.split('/');
+                    
+                    // Crear una fecha en formato yyyy-mm-ddThh:mm:ss
+                    return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}`);
+                } catch (error) {
+                    console.error(`Error parsing date: ${dateString}`, error);
+                    return new Date(); // Devolver fecha actual como fallback
+                }
             }
 
             const app = Vue.createApp({
@@ -113,12 +130,36 @@
                             );
                             let guardias = await responseGuardias.json();
 
+                            console.log("Guardias cargadas:", guardias.length);
+                            
+                            // Eliminar cualquier filtro de semana para mostrar todas las guardias
+                            this.guardias = guardias;
+
+                            
                             // Filtrar las guardias para mostrar solo las de la semana actual
                             const { startOfWeek, endOfWeek } = getWeekRange(new Date());
+                            console.log("Rango de semana:", 
+                                startOfWeek.toLocaleDateString("es-ES"), 
+                                endOfWeek.toLocaleDateString("es-ES")
+                            );
+                            
                             this.guardias = guardias.filter((guardia) => {
-                                const fechaGuardia = new Date(guardia.fecha);
-                                return fechaGuardia >= startOfWeek && fechaGuardia <= endOfWeek;
+                                try {
+                                    const fechaGuardia = parseSpanishDate(guardia.fecha);
+                                    const enRango = fechaGuardia >= startOfWeek && fechaGuardia <= endOfWeek;
+                                    console.log(`Fecha guardia: ${guardia.fecha}`, 
+                                        fechaGuardia.toLocaleDateString("es-ES"),
+                                        `En rango: ${enRango}`
+                                    );
+                                    return enRango;
+                                } catch (error) {
+                                    console.error("Error filtrando guardia:", guardia, error);
+                                    return false;
+                                }
                             });
+                            
+                            console.log("Guardias filtradas:", this.guardias.length);
+                            
 
                             // Ordenar las guardias: no firmadas primero, luego firmadas
                             this.guardias.sort((a, b) => {
@@ -142,26 +183,14 @@
                         // Ajustamos el valor de día actual para que coincida con nuestro arreglo de días de semana
                         this.diaSeleccionado = diaActual === 0 || diaActual === 6 ? "Lunes" : diasSemana[diaActual - 1];
                     },
-                    obtenerGuardias(dia, hora) {
+                    obtenerGuardias(dia) {
                         return this.guardias.filter(
                             (g) =>
-                                g.dia.trim().toLowerCase() === dia.trim().toLowerCase() &&
-                                g.hora.trim() === hora.trim()
+                                g.dia.trim().toLowerCase() === dia.trim().toLowerCase()
                         );
                     },
-                    horasConGuardias(dia) {
-                        const horasConGuardias = new Set();
-                        this.guardias.forEach((guardia) => {
-                            if (
-                                guardia.dia.trim().toLowerCase() === dia.trim().toLowerCase()
-                            ) {
-                                horasConGuardias.add(guardia.hora.trim());
-                            }
-                        });
-                        return Array.from(horasConGuardias);
-                    },
                     tieneGuardiasSinFirmar(dia, hora) {
-                        return this.obtenerGuardias(dia, hora).some(
+                        return this.obtenerGuardias(dia).some(
                             (g) => !g.registro_firmado
                         );
                     },

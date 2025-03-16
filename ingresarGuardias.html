@@ -127,7 +127,7 @@
           registrarGuardia() {
             const nuevaGuardia = {
               ...this.nuevaGuardia,
-              fecha: new Date().toISOString(), // Añadir la fecha actual
+              fecha: new Date().toLocaleString(), // Añadir la fecha actual
             };
 
             // Hacer el POST con JSON

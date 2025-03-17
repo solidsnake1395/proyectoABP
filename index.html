@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="css/estiloIndex.css" />
     </head>
     <body class="bg-gray-100 text-gray-800 min-h-screen">
-        <!-- Mover el id="app" para que incluya el header -->
+
         <div id="app">
             <header class="bg-gradient-to-r from-indigo-700 to-indigo-900 text-white py-4 shadow-md">
                 <div class="max-w-screen-xl mx-auto px-4">
@@ -109,7 +109,7 @@
                                     <div class="flex justify-between items-start">
                                         <div>
                                             <h3 class="font-semibold text-lg flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-gray-500 align-middle" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                                                 </svg>
                                                 {{ guardia.hora }}
@@ -134,16 +134,27 @@
                                                 Firmada por: <span class="ml-1">{{ obtenerProfesorNombre(guardia.sustituto_id) }}</span>
                                             </p>
                                         </div>
-                                        <button
-                                            class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200 flex items-center"
-                                            v-if="!guardia.registro_firmado"
-                                            @click.stop="redirigirFirmarGuardia(guardia.id)"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                            </svg>
-                                            Firmar
-                                        </button>
+                                        <div class="flex space-x-2">
+                                            <button
+                                                class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200 flex items-center"
+                                                v-if="!guardia.registro_firmado"
+                                                @click.stop="redirigirFirmarGuardia(guardia.id)"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                </svg>
+                                                Firmar
+                                            </button>
+                                            <button
+                                                class="bg-purple-300 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200 flex items-center"
+                                                @click.stop="redirigirEditarGuardia(guardia.id)"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L10 7.172 8.586 5.758a2 2 0 00-2.828 2.828L7.172 10 2.586 14.586a2 2 0 102.828 2.828L10 12.828l1.414 1.414a2 2 0 002.828-2.828L12.828 10l4.586-4.586a2 2 0 000-2.828z" />
+                                                </svg>
+                                                Editar
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

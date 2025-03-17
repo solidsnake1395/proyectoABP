@@ -115,6 +115,9 @@ const app = Vue.createApp({
         redirigirFirmarGuardia(guardia_id) {
             window.location.href = `firmarGuardia.html?guardia_id=${guardia_id}`;
         },
+        redirigirEditarGuardia(guardia_id) {
+            window.location.href = `editarGuardia.html?guardia_id=${guardia_id}`;
+        },
         obtenerProfesorNombre(profesor_id) {
             const profesor = this.profesores.find((p) => p.id === profesor_id);
             return profesor ? profesor.nombre : "Desconocido";

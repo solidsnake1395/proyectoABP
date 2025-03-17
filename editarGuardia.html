@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Guardia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="icon" href="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.prod.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+    <div id="app" class="max-w-screen-md mx-auto p-4 my-6 bg-white rounded-lg shadow-md">
+        <img src="https://iesescultorjoseluissanchez.com/wp-content/uploads/2024/08/01-LOGO_TRANSPARENTE-MORADOx120.png" alt="Logo" class="mx-auto mb-4" />
+        
+        <h1 class="text-2xl font-bold mb-4 text-center">Editar Guardia</h1>
+        <form @submit.prevent="guardarCambios" class="space-y-4">
+            <div>
+                <label for="fecha_guardia" class="block font-bold mb-1">Fecha de guardia:</label>
+                <input 
+                    type="date" 
+                    id="fecha_guardia" 
+                    v-model="guardia.fecha_guardia"
+                    @change="actualizarDiaSemana"
+                    required
+                    class="w-full p-2 border border-gray-300 rounded"
+                />
+                <small class="text-gray-500">Día: {{ diaSemanaTexto }}</small>
+            </div>
+
+            <div>
+                <label for="hora" class="block font-bold mb-1">Hora:</label>
+                <select id="hora" v-model="guardia.hora" required class="w-full p-2 border border-gray-300 rounded">
+                    <option value="08:30 - 09:25">08:30 - 09:25</option>
+                    <option value="09:25 - 10:20">09:25 - 10:20</option>
+                    <option value="10:20 - 11:15">10:20 - 11:15</option>
+                    <option value="11:15 - 11:45">11:15 - 11:45</option>
+                    <option value="11:45 - 12:40">11:45 - 12:40</option>
+                    <option value="12:40 - 13:35">12:40 - 13:35</option>
+                    <option value="13:35 - 14:30">13:35 - 14:30</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="profesor" class="block font-bold mb-1">Profesor:</label>
+                <select id="profesor" v-model="guardia.profesor_id" required class="w-full p-2 border border-gray-300 rounded">
+                    <option
+                        v-for="profesor in profesores"
+                        :key="profesor.id"
+                        :value="profesor.id"
+                    >
+                        {{ profesor.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label for="grupo" class="block font-bold mb-1">Grupo:</label>
+                <input
+                    type="text"
+                    id="grupo"
+                    v-model="guardia.grupo"
+                    required
+                    class="w-full p-2 border border-gray-300 rounded"
+                />
+            </div>
+
+            <div>
+                <label for="aula" class="block font-bold mb-1">Aula:</label>
+                <input
+                    type="text"
+                    id="aula"
+                    v-model="guardia.aula"
+                    required
+                    class="w-full p-2 border border-gray-300 rounded"
+                />
+            </div>
+
+            <div>
+                <label for="solucion" class="block font-bold mb-1">Solución:</label>
+                <input
+                    type="text"
+                    id="solucion"
+                    v-model="guardia.solucion"
+                    required
+                    class="w-full p-2 border border-gray-300 rounded"
+                />
+            </div>
+
+            <div class="flex items-center">
+                <input
+                    type="checkbox"
+                    id="alumnos_problematicos"
+                    v-model="guardia.alumnos_problematicos"
+                    class="mr-2"
+                />
+                <label for="alumnos_problematicos" class="font-bold">Sala profes:</label>
+            </div>
+
+            <div class="flex justify-between">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200">
+                    Guardar Cambios
+                </button>
+                <button type="button" @click="eliminarGuardia" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200">
+                    Eliminar Guardia
+                </button>
+                <button type="button" @click="volverAlIndex" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg shadow transition-colors duration-200">
+                    Volver al Index
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    profesores: [],
+                    guardia: {
+                        fecha_guardia: "",
+                        hora: "",
+                        profesor_id: "",
+                        grupo: "",
+                        aula: "",
+                        solucion: "",
+                        alumnos_problematicos: false,
+                        registro_firmado: false
+                    },
+                    diaSemanaTexto: "",
+                    guardiaId: null
+                };
+            },
+            mounted() {
+                this.cargarDatos();
+                this.cargarParametrosURL();
+            },
+            methods: {
+                cargarDatos() {
+                    $.get("http://localhost:3000/profesores", (data) => {
+                        this.profesores = data;
+                    });
+                },
+                cargarParametrosURL() {
+                    const params = new URLSearchParams(window.location.search);
+                    this.guardiaId = params.get('guardia_id');
+                    if (this.guardiaId) {
+                        this.cargarGuardia(this.guardiaId);
+                    }
+                },
+                cargarGuardia(id) {
+                    $.get(`http://localhost:3000/guardias/${id}`, (data) => {
+                        this.guardia = data;
+                        this.actualizarDiaSemana();
+                    });
+                },
+                actualizarDiaSemana() {
+                    if (!this.guardia.fecha_guardia) return;
+                    
+                    const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+                    const fecha = new Date(this.guardia.fecha_guardia);
+                    this.diaSemanaTexto = diasSemana[fecha.getDay()];
+                },
+                guardarCambios() {
+                    if (this.guardiaId) {
+                        console.log("Guardia a actualizar:", this.guardia); // Añadir log para depuración
+                        $.ajax({
+                            url: `http://localhost:3000/guardias/${this.guardiaId}`,
+                            type: "PUT",
+                            contentType: "application/json",
+                            data: JSON.stringify(this.guardia),
+                            success: () => {
+                                alert("Guardia actualizada con éxito");
+                                window.location.href = "index.html";
+                            },
+                            error: (jqXHR, textStatus, errorThrown) => {
+                                console.log("Error al actualizar la guardia:", jqXHR.responseText);
+                            }
+                        });
+                    }
+                },
+                eliminarGuardia() {
+                    if (this.guardiaId) {
+                        console.log("Guardia a eliminar:", this.guardiaId); // Añadir log para depuración
+                        $.ajax({
+                            url: `http://localhost:3000/guardias/${this.guardiaId}`,
+                            type: "DELETE",
+                            success: () => {
+                                alert("Guardia eliminada con éxito");
+                                window.location.href = "index.html";
+                            },
+                            error: (jqXHR, textStatus, errorThrown) => {
+                                console.log("Error al eliminar la guardia:", jqXHR.responseText);
+                            }
+                        });
+                    }
+                },
+                volverAlIndex() {
+                    window.location.href = "index.html";
+                }
+            }
+        });
+
+        app.mount("#app");
+    </script>
+</body>
+</html>

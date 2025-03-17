@@ -3,7 +3,7 @@
 
 # Sistema de Gestión de Guardias de Profesores 📚
 
-![image](https://github.com/user-attachments/assets/3f71b574-02c9-44df-a3d9-64f9c9d126d4)
+![image](https://github.com/user-attachments/assets/0211957c-3e64-42c1-914a-1ff291ac0916)
 
 
 ## Descripción 📝

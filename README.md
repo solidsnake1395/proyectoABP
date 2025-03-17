@@ -111,7 +111,7 @@ del lunes. Aun asi , en el mismo vistazo podemos comprobar el estado de las dema
 
 Por ultimo añadimos un selector de semanas sencillo , que se selecciona automaticamente dependiendo de la hora actual del navegador 
 
-![image](https://github.com/user-attachments/assets/b6451773-0b9f-4aab-80b9-8b5d5e1a23fc)
+
 
 Al haber utilizado vue y tailwind , seria muy facil modificar lo que mostramos en la pagina , tanto como estilo , como funcionalidad, 
 este es el motivo por que el que hemos puesto bastante esfuerzo en el diseño en lugar de añadir mas funcionalidad, dada la estructura de nuestro programa 

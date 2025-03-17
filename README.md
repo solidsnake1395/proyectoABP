@@ -3,6 +3,9 @@
 
 # Sistema de Gestión de Guardias de Profesores 📚
 
+![image](https://github.com/user-attachments/assets/3f71b574-02c9-44df-a3d9-64f9c9d126d4)
+
+
 ## Descripción 📝
 
 Este proyecto tiene como objetivo el desarrollo de una **aplicación web** que registre y gestione las **guardias de los profesores** en caso de ausencias. A través de esta aplicación, los administradores o usuarios autorizados pueden anotar las guardias, asignar profesores sustitutos, indicar los grupos y aulas afectados, y registrar si hay alumnos problemáticos.

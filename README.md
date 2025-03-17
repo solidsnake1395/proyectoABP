@@ -120,10 +120,10 @@ y asi destacar sobre los demas proyectos.
 
 Se podria implementar facilmente:
 
-  -Login y acceso por usuarios (administradores , moderadores , usuario, invitado)
-  -Filtrado de las guardias por profesores , dia , hora etc... Ya que es facil mostrarlos con VUE modificando nuestros componentes
-  -Editar el estilo ,a partir de la funcionalidad que añadimos a la pagina , seria mas facil gracias a la fusion de tailwind + vue
-  -Actualmente la pagina esta pensada para ofrecer una vista para PC/tablet y otra para smartphones , pero con tailwind podemos añadir responsividad muy facilmente
+-Login y acceso por usuarios (administradores , moderadores , usuario, invitado)
+-Filtrado de las guardias por profesores , dia , hora etc... Ya que es facil mostrarlos con VUE modificando nuestros componentes
+-Editar el estilo ,a partir de la funcionalidad que añadimos a la pagina , seria mas facil gracias a la fusion de tailwind + vue
+-Actualmente la pagina esta pensada para ofrecer una vista para PC/tablet y otra para smartphones , pero con tailwind podemos añadir responsividad muy facilmente
 
 En resumen creemos que tenemos una estructura bastante robusta y lo mas importante escalable , en funcion de lo que queramos implementar en un futuro, en caso de que fuera necesario y 
 en su defecto tenemos una aplicacion que aunque simple , no deja de ser funcional y lo mas importante , agradable al usuario.
